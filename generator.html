@@ -1260,7 +1260,7 @@ void main(){
   const uTime=gl.getUniformLocation(prog,'time');
   const uSpeed=gl.getUniformLocation(prog,'speed');
 
-  // Idle speed 0.2 — no hover interaction needed on generator (no single hero region)
+  // Idle speed 0.2 — fully decoupled from scroll via controlled shaderTime accumulation
   let currentSpeed=0.2;
 
   function resize(){
@@ -1272,12 +1272,15 @@ void main(){
   resize();window.addEventListener('resize',resize,{passive:true});
   setTimeout(()=>canvas.classList.add('loaded'),100);
 
-  let t0=null;
+  let shaderTime=0, lastTs=null;
+  const BASE_RATE=0.00042;
   (function loop(ts){
-    if(!t0)t0=ts;
+    const dt=lastTs===null ? 0 : ts-lastTs;
+    lastTs=ts;
+    shaderTime+=dt*BASE_RATE*currentSpeed;
     gl.uniform2f(uRes,canvas.width,canvas.height);
-    gl.uniform1f(uTime,(ts-t0)*0.001);
-    gl.uniform1f(uSpeed,currentSpeed);
+    gl.uniform1f(uTime,shaderTime);
+    gl.uniform1f(uSpeed,1.0);
     gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
     requestAnimationFrame(loop);
   })(0);
