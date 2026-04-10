@@ -149,6 +149,19 @@ nav.scrolled{background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border
   position:relative;
   background:transparent;
 }
+/* ── MOUNTAIN BACKGROUND ── */
+.hero-mountain{
+  position:absolute;
+  bottom:-6%;
+  left:50%;
+  transform:translateX(-50%);
+  width:clamp(900px,130vw,2000px);
+  pointer-events:none;
+  z-index:1;
+  opacity:0.18;
+  filter:blur(1.5px) brightness(0.7);
+  user-select:none;
+}
 /* hero-canvas hidden — global bg-canvas handles everything */
 #hero-canvas{display:none}
 .hero-content{position:relative;z-index:10;padding:140px 24px 100px;display:flex;flex-direction:column;align-items:center}
@@ -167,7 +180,6 @@ nav.scrolled{background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border
 .badge-pulse{width:7px;height:7px;border-radius:50%;background:var(--mint);animation:pulse 2.4s ease infinite;flex-shrink:0}
 @keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.65);opacity:0.45}}
 
-/* ── WORDMARK ── */
 .hero-wordmark-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center;margin-bottom:20px;transition-delay:0.17s}
 .hero-wordmark{
   font-family:'DM Serif Display',serif;
@@ -353,6 +365,8 @@ footer{
 <section class="hero">
   <!-- Dithering canvas — contained inside hero, smooth warp like reference screenshot -->
   <canvas id="hero-canvas"></canvas>
+  <!-- Mountain background -->
+  <img src="mountain.png" alt="" class="hero-mountain" aria-hidden="true">
   <div class="hero-floats">
     <div class="float-card fc1"><div class="dot"></div>Chest · Shoulders · Triceps</div>
     <div class="float-card fc2"><div class="dot"></div>~52 min estimated</div>
@@ -361,7 +375,7 @@ footer{
     <div class="float-card fc5"><div class="dot"></div>Rest 2.5 min between sets</div>
   </div>
   <div class="hero-content">
-    <div class="hero-badge h-anim" id="hBadge"><div class="badge-pulse"></div>No guesswork. Just gains.</div>
+<div class="hero-badge h-anim" id="hBadge"><div class="badge-pulse"></div>No guesswork. Just gains.</div>
 
     <div class="hero-wordmark-wrap h-anim" id="hWord" style="transition-delay:0.17s">
       <div class="hero-wordmark">train<span>mint</span></div>
