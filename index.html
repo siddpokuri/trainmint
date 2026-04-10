@@ -149,19 +149,6 @@ nav.scrolled{background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border
   position:relative;
   background:transparent;
 }
-/* ── MOUNTAIN BACKGROUND ── */
-.hero-mountain{
-  position:absolute;
-  bottom:-6%;
-  left:50%;
-  transform:translateX(-50%);
-  width:clamp(900px,130vw,2000px);
-  pointer-events:none;
-  z-index:1;
-  opacity:0.18;
-  filter:blur(1.5px) brightness(0.7);
-  user-select:none;
-}
 /* hero-canvas hidden — global bg-canvas handles everything */
 #hero-canvas{display:none}
 .hero-content{position:relative;z-index:10;padding:140px 24px 100px;display:flex;flex-direction:column;align-items:center}
@@ -365,8 +352,6 @@ footer{
 <section class="hero">
   <!-- Dithering canvas — contained inside hero, smooth warp like reference screenshot -->
   <canvas id="hero-canvas"></canvas>
-  <!-- Mountain background -->
-  <img src="mountain.png" alt="" class="hero-mountain" aria-hidden="true">
   <div class="hero-floats">
     <div class="float-card fc1"><div class="dot"></div>Chest · Shoulders · Triceps</div>
     <div class="float-card fc2"><div class="dot"></div>~52 min estimated</div>
@@ -604,13 +589,20 @@ void main(){
   window.addEventListener('resize',resize,{passive:true});
   setTimeout(()=>canvas.classList.add('loaded'),100);
 
-  let t0=null;
+  // shaderTime accumulates independently at a fixed slow rate —
+  // completely decoupled from scroll, real time, or any page interaction.
+  // This prevents any perceived "jump" or speed-up during scroll.
+  let shaderTime=0, lastTs=null;
+  const BASE_RATE=0.00018; // seconds of shader time per real millisecond at speed=1
   (function loop(ts){
-    if(!t0)t0=ts;
-    currentSpeed+=(targetSpeed-currentSpeed)*0.04;
+    const dt = lastTs===null ? 0 : ts-lastTs;
+    lastTs=ts;
+    currentSpeed+=(targetSpeed-currentSpeed)*0.03;
+    // accumulate shader time at a controlled, scroll-independent rate
+    shaderTime += dt * BASE_RATE * currentSpeed;
     gl.uniform2f(uRes,canvas.width,canvas.height);
-    gl.uniform1f(uTime,(ts-t0)*0.001);
-    gl.uniform1f(uSpeed,currentSpeed);
+    gl.uniform1f(uTime,shaderTime);
+    gl.uniform1f(uSpeed,1.0); // speed already baked into shaderTime accumulation
     gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
     requestAnimationFrame(loop);
   })(0);
