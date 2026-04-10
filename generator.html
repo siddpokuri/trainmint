@@ -390,182 +390,313 @@ function toggleEquipNothing(el) {
 // ─────────────────────────────────────────────
 // EXERCISE DATABASE
 // ─────────────────────────────────────────────
-// Format: { name, part, type:'compound'|'isolation', equipment:[], alternatives:[{name,equipment:[]}] }
+// Each exercise has alts:[] — an ordered list of alternatives.
+// The renderer picks the first alt the user can actually do.
 const DB = {
   back: {
     lats: [
-      { name: 'Narrow-grip pull-ups', type: 'compound', equipment: ['pullup_bar'], targets: 'Lats', alt: { name: 'Narrow-grip lat pulldown', equipment: ['machines'] } },
-      { name: 'Dumbbell rows', type: 'compound', equipment: ['dumbbells'], targets: 'Lats, mid-back', alt: { name: 'Backpack rows', equipment: ['nothing'] } },
-      { name: 'Narrow-grip lat pulldown', type: 'compound', equipment: ['machines'], targets: 'Lats', alt: { name: 'Narrow-grip pull-ups', equipment: ['pullup_bar'] } },
-      { name: 'Narrow-grip cable rows', type: 'compound', equipment: ['machines'], targets: 'Lats', alt: { name: 'Dumbbell rows', equipment: ['dumbbells'] } },
-      { name: 'Lat pullovers', type: 'isolation', equipment: ['machines'], targets: 'Lats', alt: { name: 'Dumbbell rows', equipment: ['dumbbells'] } },
-      { name: 'Backpack rows', type: 'compound', equipment: ['nothing'], targets: 'Lats, mid-back', alt: { name: 'Dumbbell rows', equipment: ['dumbbells'] } },
+      { name: 'Narrow-grip pull-ups', type: 'compound', equipment: ['pullup_bar'], targets: 'Lats',
+        alts: [{ name: 'Narrow-grip lat pulldown', equipment: ['machines'] }, { name: 'Dumbbell rows', equipment: ['dumbbells'] }, { name: 'Backpack rows', equipment: ['nothing'] }] },
+      { name: 'Narrow-grip lat pulldown', type: 'compound', equipment: ['machines'], targets: 'Lats',
+        alts: [{ name: 'Narrow-grip pull-ups', equipment: ['pullup_bar'] }, { name: 'Dumbbell rows', equipment: ['dumbbells'] }, { name: 'Backpack rows', equipment: ['nothing'] }] },
+      { name: 'Narrow-grip cable rows', type: 'compound', equipment: ['machines'], targets: 'Lats',
+        alts: [{ name: 'Dumbbell rows', equipment: ['dumbbells'] }, { name: 'Narrow-grip pull-ups', equipment: ['pullup_bar'] }, { name: 'Backpack rows', equipment: ['nothing'] }] },
+      { name: 'Lat pullovers', type: 'isolation', equipment: ['machines'], targets: 'Lats',
+        alts: [{ name: 'Dumbbell rows', equipment: ['dumbbells'] }, { name: 'Backpack rows', equipment: ['nothing'] }] },
+      { name: 'Dumbbell rows', type: 'compound', equipment: ['dumbbells'], targets: 'Lats, mid-back',
+        alts: [{ name: 'Narrow-grip pull-ups', equipment: ['pullup_bar'] }, { name: 'Narrow-grip lat pulldown', equipment: ['machines'] }, { name: 'Backpack rows', equipment: ['nothing'] }] },
+      { name: 'Backpack rows', type: 'compound', equipment: ['nothing'], targets: 'Lats, mid-back',
+        alts: [{ name: 'Dumbbell rows', equipment: ['dumbbells'] }, { name: 'Narrow-grip pull-ups', equipment: ['pullup_bar'] }, { name: 'Narrow-grip lat pulldown', equipment: ['machines'] }] },
     ],
     midback: [
-      { name: 'Bent-over barbell rows', type: 'compound', equipment: ['barbell', 'barbell_bench'], targets: 'Mid-back, traps', alt: { name: 'Dumbbell rows', equipment: ['dumbbells'] } },
-      { name: 'Machine row', type: 'compound', equipment: ['machines'], targets: 'Mid-back', alt: { name: 'Dumbbell rows', equipment: ['dumbbells'] } },
-      { name: 'Wide-grip cable rows', type: 'compound', equipment: ['machines'], targets: 'Mid-back, traps', alt: { name: 'Bent-over barbell rows', equipment: ['barbell', 'barbell_bench'] } },
-      { name: 'Face pulls', type: 'isolation', equipment: ['machines'], targets: 'Rear delts, traps', alt: { name: 'Bent-over reverse flys', equipment: ['dumbbells'] } },
-      { name: 'Dumbbell shrugs', type: 'isolation', equipment: ['dumbbells'], targets: 'Traps', alt: { name: 'Barbell shrugs', equipment: ['barbell', 'barbell_bench'] } },
-      { name: 'Barbell shrugs', type: 'isolation', equipment: ['barbell', 'barbell_bench'], targets: 'Traps', alt: { name: 'Dumbbell shrugs', equipment: ['dumbbells'] } },
+      { name: 'Bent-over barbell rows', type: 'compound', equipment: ['barbell', 'barbell_bench'], targets: 'Mid-back, traps',
+        alts: [{ name: 'Machine row', equipment: ['machines'] }, { name: 'Dumbbell rows', equipment: ['dumbbells'] }, { name: 'Wide-grip pull-ups', equipment: ['pullup_bar'] }, { name: 'Backpack rows', equipment: ['nothing'] }] },
+      { name: 'Machine row', type: 'compound', equipment: ['machines'], targets: 'Mid-back',
+        alts: [{ name: 'Bent-over barbell rows', equipment: ['barbell', 'barbell_bench'] }, { name: 'Dumbbell rows', equipment: ['dumbbells'] }, { name: 'Backpack rows', equipment: ['nothing'] }] },
+      { name: 'Wide-grip cable rows', type: 'compound', equipment: ['machines'], targets: 'Mid-back, traps',
+        alts: [{ name: 'Bent-over barbell rows', equipment: ['barbell', 'barbell_bench'] }, { name: 'Dumbbell rows', equipment: ['dumbbells'] }] },
+      { name: 'Wide-grip pull-ups', type: 'compound', equipment: ['pullup_bar'], targets: 'Mid-back, lats',
+        alts: [{ name: 'Machine row', equipment: ['machines'] }, { name: 'Bent-over barbell rows', equipment: ['barbell', 'barbell_bench'] }, { name: 'Dumbbell rows', equipment: ['dumbbells'] }] },
+      { name: 'Face pulls', type: 'isolation', equipment: ['machines'], targets: 'Rear delts, traps',
+        alts: [{ name: 'Bent-over reverse flys', equipment: ['dumbbells'] }, { name: 'Dumbbell shrugs', equipment: ['dumbbells'] }] },
+      { name: 'Dumbbell shrugs', type: 'isolation', equipment: ['dumbbells'], targets: 'Traps',
+        alts: [{ name: 'Barbell shrugs', equipment: ['barbell', 'barbell_bench'] }, { name: 'Machine row', equipment: ['machines'] }] },
+      { name: 'Barbell shrugs', type: 'isolation', equipment: ['barbell', 'barbell_bench'], targets: 'Traps',
+        alts: [{ name: 'Dumbbell shrugs', equipment: ['dumbbells'] }, { name: 'Machine row', equipment: ['machines'] }] },
     ]
   },
   chest: {
     upper: [
-      { name: 'Incline bench press', type: 'compound', equipment: ['barbell_bench'], targets: 'Upper chest, front delts, triceps', alt: { name: 'Incline dumbbell press', equipment: ['dumbbells', 'bench'] } },
-      { name: 'Incline dumbbell press', type: 'compound', equipment: ['dumbbells', 'bench'], targets: 'Upper chest, front delts', alt: { name: 'Incline smith machine bench press', equipment: ['machines'] } },
-      { name: 'Incline smith machine bench press', type: 'compound', equipment: ['machines'], targets: 'Upper chest, front delts', alt: { name: 'Incline dumbbell press', equipment: ['dumbbells', 'bench'] } },
-      { name: 'Incline dumbbell flys', type: 'isolation', equipment: ['dumbbells', 'bench'], targets: 'Upper chest', alt: { name: 'Low-to-high cable flys', equipment: ['machines'] } },
-      { name: 'Low-to-high cable flys', type: 'isolation', equipment: ['machines'], targets: 'Upper chest', alt: { name: 'Incline dumbbell flys', equipment: ['dumbbells', 'bench'] } },
-      { name: 'Decline push-ups', type: 'compound', equipment: ['nothing'], targets: 'Upper chest, triceps', alt: { name: 'Pike push-ups', equipment: ['nothing'] } },
+      { name: 'Incline bench press', type: 'compound', equipment: ['barbell_bench'], targets: 'Upper chest, front delts, triceps',
+        alts: [{ name: 'Incline dumbbell press', equipment: ['dumbbells', 'bench'] }, { name: 'Incline smith machine bench press', equipment: ['machines'] }, { name: 'Low-to-high cable flys', equipment: ['machines'] }, { name: 'Decline push-ups', equipment: ['nothing'] }] },
+      { name: 'Incline dumbbell press', type: 'compound', equipment: ['dumbbells', 'bench'], targets: 'Upper chest, front delts',
+        alts: [{ name: 'Incline bench press', equipment: ['barbell_bench'] }, { name: 'Incline smith machine bench press', equipment: ['machines'] }, { name: 'Decline push-ups', equipment: ['nothing'] }] },
+      { name: 'Incline smith machine bench press', type: 'compound', equipment: ['machines'], targets: 'Upper chest, front delts',
+        alts: [{ name: 'Incline bench press', equipment: ['barbell_bench'] }, { name: 'Incline dumbbell press', equipment: ['dumbbells', 'bench'] }, { name: 'Decline push-ups', equipment: ['nothing'] }] },
+      { name: 'Low-to-high cable flys', type: 'isolation', equipment: ['machines'], targets: 'Upper chest',
+        alts: [{ name: 'Incline dumbbell flys', equipment: ['dumbbells', 'bench'] }, { name: 'Incline dumbbell press', equipment: ['dumbbells', 'bench'] }, { name: 'Decline push-ups', equipment: ['nothing'] }] },
+      { name: 'Incline dumbbell flys', type: 'isolation', equipment: ['dumbbells', 'bench'], targets: 'Upper chest',
+        alts: [{ name: 'Low-to-high cable flys', equipment: ['machines'] }, { name: 'Incline dumbbell press', equipment: ['dumbbells', 'bench'] }, { name: 'Decline push-ups', equipment: ['nothing'] }] },
+      { name: 'Decline push-ups', type: 'compound', equipment: ['nothing'], targets: 'Upper chest, triceps',
+        alts: [{ name: 'Incline dumbbell press', equipment: ['dumbbells', 'bench'] }, { name: 'Incline bench press', equipment: ['barbell_bench'] }, { name: 'Incline smith machine bench press', equipment: ['machines'] }] },
     ],
     midlower: [
-      { name: 'Bench press', type: 'compound', equipment: ['barbell_bench'], targets: 'Mid/lower chest, front delts, triceps', alt: { name: 'Dumbbell press', equipment: ['dumbbells', 'bench'] } },
-      { name: 'Dumbbell press', type: 'compound', equipment: ['dumbbells', 'bench'], targets: 'Mid chest, front delts', alt: { name: 'Smith machine bench press', equipment: ['machines'] } },
-      { name: 'Smith machine bench press', type: 'compound', equipment: ['machines'], targets: 'Mid chest, front delts, triceps', alt: { name: 'Dumbbell press', equipment: ['dumbbells', 'bench'] } },
-      { name: 'Dumbbell flys', type: 'isolation', equipment: ['dumbbells', 'bench'], targets: 'Mid chest', alt: { name: 'High-to-low cable flys', equipment: ['machines'] } },
-      { name: 'High-to-low cable flys', type: 'isolation', equipment: ['machines'], targets: 'Mid/lower chest', alt: { name: 'Dumbbell flys', equipment: ['dumbbells', 'bench'] } },
-      { name: 'Dips', type: 'compound', equipment: ['nothing', 'machines'], targets: 'Lower chest, triceps, front delts', alt: { name: 'Push-ups', equipment: ['nothing'] } },
-      { name: 'Push-ups', type: 'compound', equipment: ['nothing'], targets: 'Chest, triceps, front delts', alt: { name: 'Dips', equipment: ['nothing'] } },
+      { name: 'Bench press', type: 'compound', equipment: ['barbell_bench'], targets: 'Mid/lower chest, front delts, triceps',
+        alts: [{ name: 'Dumbbell press', equipment: ['dumbbells', 'bench'] }, { name: 'Smith machine bench press', equipment: ['machines'] }, { name: 'Machine chest press', equipment: ['machines'] }, { name: 'Dips', equipment: ['nothing'] }, { name: 'Push-ups', equipment: ['nothing'] }] },
+      { name: 'Dumbbell press', type: 'compound', equipment: ['dumbbells', 'bench'], targets: 'Mid chest, front delts',
+        alts: [{ name: 'Bench press', equipment: ['barbell_bench'] }, { name: 'Smith machine bench press', equipment: ['machines'] }, { name: 'Machine chest press', equipment: ['machines'] }, { name: 'Push-ups', equipment: ['nothing'] }] },
+      { name: 'Smith machine bench press', type: 'compound', equipment: ['machines'], targets: 'Mid chest, front delts',
+        alts: [{ name: 'Bench press', equipment: ['barbell_bench'] }, { name: 'Dumbbell press', equipment: ['dumbbells', 'bench'] }, { name: 'Push-ups', equipment: ['nothing'] }] },
+      { name: 'Machine chest press', type: 'compound', equipment: ['machines'], targets: 'Mid chest',
+        alts: [{ name: 'Bench press', equipment: ['barbell_bench'] }, { name: 'Dumbbell press', equipment: ['dumbbells', 'bench'] }, { name: 'Push-ups', equipment: ['nothing'] }] },
+      { name: 'High-to-low cable flys', type: 'isolation', equipment: ['machines'], targets: 'Lower chest',
+        alts: [{ name: 'Dumbbell flys', equipment: ['dumbbells', 'bench'] }, { name: 'Dips', equipment: ['nothing'] }, { name: 'Push-ups', equipment: ['nothing'] }] },
+      { name: 'Dumbbell flys', type: 'isolation', equipment: ['dumbbells', 'bench'], targets: 'Mid chest',
+        alts: [{ name: 'High-to-low cable flys', equipment: ['machines'] }, { name: 'Dumbbell press', equipment: ['dumbbells', 'bench'] }, { name: 'Push-ups', equipment: ['nothing'] }] },
+      { name: 'Dips', type: 'compound', equipment: ['nothing'], targets: 'Lower chest, triceps',
+        alts: [{ name: 'Push-ups', equipment: ['nothing'] }, { name: 'Bench press', equipment: ['barbell_bench'] }, { name: 'Dumbbell press', equipment: ['dumbbells', 'bench'] }, { name: 'Machine chest press', equipment: ['machines'] }] },
+      { name: 'Push-ups', type: 'compound', equipment: ['nothing'], targets: 'Chest, triceps, front delts',
+        alts: [{ name: 'Dips', equipment: ['nothing'] }, { name: 'Bench press', equipment: ['barbell_bench'] }, { name: 'Dumbbell press', equipment: ['dumbbells', 'bench'] }, { name: 'Machine chest press', equipment: ['machines'] }] },
     ]
   },
   shoulders: {
     front: [
-      { name: 'Overhead barbell press', type: 'compound', equipment: ['barbell', 'barbell_bench'], targets: 'Front delts, triceps, upper chest', alt: { name: 'Overhead dumbbell press', equipment: ['dumbbells'] } },
-      { name: 'Overhead dumbbell press', type: 'compound', equipment: ['dumbbells'], targets: 'Front delts, triceps', alt: { name: 'Smith overhead barbell press', equipment: ['machines'] } },
-      { name: 'Smith overhead barbell press', type: 'compound', equipment: ['machines'], targets: 'Front delts, triceps', alt: { name: 'Overhead dumbbell press', equipment: ['dumbbells'] } },
-      { name: 'Pike push-ups', type: 'compound', equipment: ['nothing'], targets: 'Front delts, triceps', alt: { name: 'Overhead dumbbell press', equipment: ['dumbbells'] } },
+      { name: 'Overhead barbell press', type: 'compound', equipment: ['barbell', 'barbell_bench'], targets: 'Front delts, triceps, upper chest',
+        alts: [{ name: 'Overhead dumbbell press', equipment: ['dumbbells'] }, { name: 'Smith overhead barbell press', equipment: ['machines'] }, { name: 'Pike push-ups', equipment: ['nothing'] }] },
+      { name: 'Overhead dumbbell press', type: 'compound', equipment: ['dumbbells'], targets: 'Front delts, triceps',
+        alts: [{ name: 'Overhead barbell press', equipment: ['barbell', 'barbell_bench'] }, { name: 'Smith overhead barbell press', equipment: ['machines'] }, { name: 'Pike push-ups', equipment: ['nothing'] }] },
+      { name: 'Smith overhead barbell press', type: 'compound', equipment: ['machines'], targets: 'Front delts, triceps',
+        alts: [{ name: 'Overhead dumbbell press', equipment: ['dumbbells'] }, { name: 'Overhead barbell press', equipment: ['barbell', 'barbell_bench'] }, { name: 'Pike push-ups', equipment: ['nothing'] }] },
+      { name: 'Pike push-ups', type: 'compound', equipment: ['nothing'], targets: 'Front delts, triceps',
+        alts: [{ name: 'Overhead dumbbell press', equipment: ['dumbbells'] }, { name: 'Overhead barbell press', equipment: ['barbell', 'barbell_bench'] }, { name: 'Smith overhead barbell press', equipment: ['machines'] }] },
     ],
     side: [
-      { name: 'Dumbbell lateral raises', type: 'isolation', equipment: ['dumbbells'], targets: 'Side delts', alt: { name: 'Cable lateral raises', equipment: ['machines'] } },
-      { name: 'Cable lateral raises', type: 'isolation', equipment: ['machines'], targets: 'Side delts', alt: { name: 'Dumbbell lateral raises', equipment: ['dumbbells'] } },
-      { name: 'Upright rows', type: 'compound', equipment: ['barbell', 'barbell_bench'], targets: 'Side delts, traps', alt: { name: 'Dumbbell lateral raises', equipment: ['dumbbells'] } },
-      { name: 'Backpack lateral raises', type: 'isolation', equipment: ['nothing'], targets: 'Side delts', alt: { name: 'Dumbbell lateral raises', equipment: ['dumbbells'] } },
+      { name: 'Dumbbell lateral raises', type: 'isolation', equipment: ['dumbbells'], targets: 'Side delts',
+        alts: [{ name: 'Cable lateral raises', equipment: ['machines'] }, { name: 'Upright rows', equipment: ['barbell', 'barbell_bench'] }, { name: 'Backpack lateral raises', equipment: ['nothing'] }] },
+      { name: 'Cable lateral raises', type: 'isolation', equipment: ['machines'], targets: 'Side delts',
+        alts: [{ name: 'Dumbbell lateral raises', equipment: ['dumbbells'] }, { name: 'Upright rows', equipment: ['barbell', 'barbell_bench'] }, { name: 'Backpack lateral raises', equipment: ['nothing'] }] },
+      { name: 'Upright rows', type: 'compound', equipment: ['barbell', 'barbell_bench'], targets: 'Side delts, traps',
+        alts: [{ name: 'Dumbbell lateral raises', equipment: ['dumbbells'] }, { name: 'Cable lateral raises', equipment: ['machines'] }, { name: 'Backpack lateral raises', equipment: ['nothing'] }] },
+      { name: 'Backpack lateral raises', type: 'isolation', equipment: ['nothing'], targets: 'Side delts',
+        alts: [{ name: 'Dumbbell lateral raises', equipment: ['dumbbells'] }, { name: 'Cable lateral raises', equipment: ['machines'] }] },
     ],
     rear: [
-      { name: 'Reverse pec deck', type: 'isolation', equipment: ['machines'], targets: 'Rear delts', alt: { name: 'Bent-over reverse flys', equipment: ['dumbbells'] } },
-      { name: 'Bent-over reverse flys', type: 'isolation', equipment: ['dumbbells'], targets: 'Rear delts', alt: { name: 'Reverse cable flys', equipment: ['machines'] } },
-      { name: 'Reverse cable flys', type: 'isolation', equipment: ['machines'], targets: 'Rear delts', alt: { name: 'Bent-over reverse flys', equipment: ['dumbbells'] } },
+      { name: 'Reverse pec deck', type: 'isolation', equipment: ['machines'], targets: 'Rear delts',
+        alts: [{ name: 'Bent-over reverse flys', equipment: ['dumbbells'] }, { name: 'Reverse cable flys', equipment: ['machines'] }] },
+      { name: 'Bent-over reverse flys', type: 'isolation', equipment: ['dumbbells'], targets: 'Rear delts',
+        alts: [{ name: 'Reverse pec deck', equipment: ['machines'] }, { name: 'Reverse cable flys', equipment: ['machines'] }] },
+      { name: 'Reverse cable flys', type: 'isolation', equipment: ['machines'], targets: 'Rear delts',
+        alts: [{ name: 'Bent-over reverse flys', equipment: ['dumbbells'] }, { name: 'Reverse pec deck', equipment: ['machines'] }] },
     ]
   },
   quads: {
     main: [
-      { name: 'Barbell squats', type: 'compound', equipment: ['barbell_bench'], targets: 'Quads, glutes, hamstrings', alt: { name: 'Goblet squats', equipment: ['dumbbells'] } },
-      { name: 'Goblet squats', type: 'compound', equipment: ['dumbbells'], targets: 'Quads, glutes', alt: { name: 'Hack squats', equipment: ['machines'] } },
-      { name: 'Hack squats', type: 'compound', equipment: ['machines'], targets: 'Quads, glutes', alt: { name: 'Barbell squats', equipment: ['barbell_bench'] } },
-      { name: 'Lunges', type: 'compound', equipment: ['nothing'], targets: 'Quads, glutes, hamstrings', alt: { name: 'Goblet squats', equipment: ['dumbbells'] } },
-      { name: 'Weighted lunges', type: 'compound', equipment: ['dumbbells'], targets: 'Quads, glutes', alt: { name: 'Barbell squats', equipment: ['barbell_bench'] } },
-      { name: 'Backpack squats', type: 'compound', equipment: ['nothing'], targets: 'Quads, glutes', alt: { name: 'Lunges', equipment: ['nothing'] } },
+      { name: 'Barbell squats', type: 'compound', equipment: ['barbell_bench'], targets: 'Quads, glutes, hamstrings',
+        alts: [{ name: 'Hack squats', equipment: ['machines'] }, { name: 'Goblet squats', equipment: ['dumbbells'] }, { name: 'Weighted lunges', equipment: ['dumbbells'] }, { name: 'Lunges', equipment: ['nothing'] }, { name: 'Backpack squats', equipment: ['nothing'] }] },
+      { name: 'Hack squats', type: 'compound', equipment: ['machines'], targets: 'Quads, glutes',
+        alts: [{ name: 'Barbell squats', equipment: ['barbell_bench'] }, { name: 'Goblet squats', equipment: ['dumbbells'] }, { name: 'Lunges', equipment: ['nothing'] }, { name: 'Backpack squats', equipment: ['nothing'] }] },
+      { name: 'Goblet squats', type: 'compound', equipment: ['dumbbells'], targets: 'Quads, glutes',
+        alts: [{ name: 'Barbell squats', equipment: ['barbell_bench'] }, { name: 'Hack squats', equipment: ['machines'] }, { name: 'Weighted lunges', equipment: ['dumbbells'] }, { name: 'Lunges', equipment: ['nothing'] }, { name: 'Backpack squats', equipment: ['nothing'] }] },
+      { name: 'Weighted lunges', type: 'compound', equipment: ['dumbbells'], targets: 'Quads, glutes',
+        alts: [{ name: 'Goblet squats', equipment: ['dumbbells'] }, { name: 'Barbell squats', equipment: ['barbell_bench'] }, { name: 'Hack squats', equipment: ['machines'] }, { name: 'Lunges', equipment: ['nothing'] }] },
+      { name: 'Lunges', type: 'compound', equipment: ['nothing'], targets: 'Quads, glutes, hamstrings',
+        alts: [{ name: 'Backpack squats', equipment: ['nothing'] }, { name: 'Goblet squats', equipment: ['dumbbells'] }, { name: 'Barbell squats', equipment: ['barbell_bench'] }, { name: 'Hack squats', equipment: ['machines'] }] },
+      { name: 'Backpack squats', type: 'compound', equipment: ['nothing'], targets: 'Quads, glutes',
+        alts: [{ name: 'Lunges', equipment: ['nothing'] }, { name: 'Goblet squats', equipment: ['dumbbells'] }, { name: 'Barbell squats', equipment: ['barbell_bench'] }] },
     ],
     iso: [
-      { name: 'Leg extensions', type: 'isolation', equipment: ['machines'], targets: 'Quads (VMO)', alt: { name: 'Reverse nordic curl', equipment: ['nothing'] } },
-      { name: 'Reverse nordic curl', type: 'isolation', equipment: ['nothing'], targets: 'Quads (rectus femoris)', alt: { name: 'Leg extensions', equipment: ['machines'] } },
+      { name: 'Leg extensions', type: 'isolation', equipment: ['machines'], targets: 'Quads (VMO)',
+        alts: [{ name: 'Reverse nordic curl', equipment: ['nothing'] }] },
+      { name: 'Reverse nordic curl', type: 'isolation', equipment: ['nothing'], targets: 'Quads (rectus femoris)',
+        alts: [{ name: 'Leg extensions', equipment: ['machines'] }] },
     ]
   },
   hamstrings: {
     main: [
-      { name: 'Romanian deadlifts (barbell)', type: 'compound', equipment: ['barbell', 'barbell_bench'], targets: 'Hamstrings, glutes', alt: { name: 'Romanian deadlifts (dumbbell)', equipment: ['dumbbells'] } },
-      { name: 'Romanian deadlifts (dumbbell)', type: 'compound', equipment: ['dumbbells'], targets: 'Hamstrings, glutes', alt: { name: 'Seated leg curl', equipment: ['machines'] } },
-      { name: 'Seated leg curl', type: 'isolation', equipment: ['machines'], targets: 'Hamstrings', alt: { name: 'Lying leg curl', equipment: ['machines'] } },
-      { name: 'Lying leg curl', type: 'isolation', equipment: ['machines'], targets: 'Hamstrings', alt: { name: 'Nordic hamstring curl', equipment: ['nothing'] } },
-      { name: 'Nordic hamstring curl', type: 'isolation', equipment: ['nothing'], targets: 'Hamstrings (eccentric)', alt: { name: 'Seated leg curl', equipment: ['machines'] } },
+      { name: 'Romanian deadlifts (barbell)', type: 'compound', equipment: ['barbell', 'barbell_bench'], targets: 'Hamstrings, glutes',
+        alts: [{ name: 'Romanian deadlifts (dumbbell)', equipment: ['dumbbells'] }, { name: 'Deadlifts', equipment: ['barbell', 'barbell_bench'] }, { name: 'Nordic hamstring curl', equipment: ['nothing'] }, { name: 'Seated leg curl', equipment: ['machines'] }] },
+      { name: 'Romanian deadlifts (dumbbell)', type: 'compound', equipment: ['dumbbells'], targets: 'Hamstrings, glutes',
+        alts: [{ name: 'Romanian deadlifts (barbell)', equipment: ['barbell', 'barbell_bench'] }, { name: 'Nordic hamstring curl', equipment: ['nothing'] }, { name: 'Seated leg curl', equipment: ['machines'] }] },
+      { name: 'Deadlifts', type: 'compound', equipment: ['barbell', 'barbell_bench'], targets: 'Hamstrings, glutes, back',
+        alts: [{ name: 'Romanian deadlifts (barbell)', equipment: ['barbell', 'barbell_bench'] }, { name: 'Romanian deadlifts (dumbbell)', equipment: ['dumbbells'] }, { name: 'Nordic hamstring curl', equipment: ['nothing'] }] },
+      { name: 'Seated leg curl', type: 'isolation', equipment: ['machines'], targets: 'Hamstrings',
+        alts: [{ name: 'Lying leg curl', equipment: ['machines'] }, { name: 'Nordic hamstring curl', equipment: ['nothing'] }, { name: 'Romanian deadlifts (dumbbell)', equipment: ['dumbbells'] }] },
+      { name: 'Lying leg curl', type: 'isolation', equipment: ['machines'], targets: 'Hamstrings',
+        alts: [{ name: 'Seated leg curl', equipment: ['machines'] }, { name: 'Nordic hamstring curl', equipment: ['nothing'] }, { name: 'Romanian deadlifts (dumbbell)', equipment: ['dumbbells'] }] },
+      { name: 'Nordic hamstring curl', type: 'isolation', equipment: ['nothing'], targets: 'Hamstrings (eccentric)',
+        alts: [{ name: 'Seated leg curl', equipment: ['machines'] }, { name: 'Lying leg curl', equipment: ['machines'] }, { name: 'Romanian deadlifts (dumbbell)', equipment: ['dumbbells'] }] },
     ]
   },
   glutes: {
     main: [
-      { name: 'Hip thrusts', type: 'compound', equipment: ['machines', 'barbell_bench'], targets: 'Glutes, hamstrings', alt: { name: 'Glute bridges', equipment: ['nothing'] } },
-      { name: 'Glute bridges', type: 'compound', equipment: ['nothing'], targets: 'Glutes, hamstrings', alt: { name: 'Hip thrusts', equipment: ['machines'] } },
-      { name: 'Romanian deadlifts (barbell)', type: 'compound', equipment: ['barbell', 'barbell_bench'], targets: 'Glutes, hamstrings', alt: { name: 'Romanian deadlifts (dumbbell)', equipment: ['dumbbells'] } },
-      { name: 'Romanian deadlifts (dumbbell)', type: 'compound', equipment: ['dumbbells'], targets: 'Glutes, hamstrings', alt: { name: 'Hip thrusts', equipment: ['machines'] } },
-      { name: 'Bulgarian split squats', type: 'compound', equipment: ['dumbbells', 'bench'], targets: 'Glutes, quads', alt: { name: 'Glute bridges', equipment: ['nothing'] } },
+      { name: 'Hip thrusts', type: 'compound', equipment: ['machines', 'barbell_bench'], targets: 'Glutes, hamstrings',
+        alts: [{ name: 'Glute bridges', equipment: ['nothing'] }, { name: 'Romanian deadlifts (barbell)', equipment: ['barbell', 'barbell_bench'] }, { name: 'Romanian deadlifts (dumbbell)', equipment: ['dumbbells'] }, { name: 'Frog pumps', equipment: ['nothing'] }] },
+      { name: 'Romanian deadlifts (barbell)', type: 'compound', equipment: ['barbell', 'barbell_bench'], targets: 'Glutes, hamstrings',
+        alts: [{ name: 'Romanian deadlifts (dumbbell)', equipment: ['dumbbells'] }, { name: 'Hip thrusts', equipment: ['machines', 'barbell_bench'] }, { name: 'Glute bridges', equipment: ['nothing'] }] },
+      { name: 'Romanian deadlifts (dumbbell)', type: 'compound', equipment: ['dumbbells'], targets: 'Glutes, hamstrings',
+        alts: [{ name: 'Romanian deadlifts (barbell)', equipment: ['barbell', 'barbell_bench'] }, { name: 'Hip thrusts', equipment: ['machines', 'barbell_bench'] }, { name: 'Glute bridges', equipment: ['nothing'] }] },
+      { name: 'Bulgarian split squats', type: 'compound', equipment: ['dumbbells', 'bench'], targets: 'Glutes, quads',
+        alts: [{ name: 'Romanian deadlifts (dumbbell)', equipment: ['dumbbells'] }, { name: 'Hip thrusts', equipment: ['machines', 'barbell_bench'] }, { name: 'Glute bridges', equipment: ['nothing'] }] },
+      { name: 'Cable kickbacks', type: 'isolation', equipment: ['machines'], targets: 'Glutes',
+        alts: [{ name: 'Glute bridges', equipment: ['nothing'] }, { name: 'Frog pumps', equipment: ['nothing'] }] },
+      { name: 'Rack pulls', type: 'compound', equipment: ['barbell', 'barbell_bench'], targets: 'Glutes, hamstrings, back',
+        alts: [{ name: 'Romanian deadlifts (barbell)', equipment: ['barbell', 'barbell_bench'] }, { name: 'Glute bridges', equipment: ['nothing'] }] },
+      { name: 'Glute bridges', type: 'compound', equipment: ['nothing'], targets: 'Glutes, hamstrings',
+        alts: [{ name: 'Hip thrusts', equipment: ['machines', 'barbell_bench'] }, { name: 'Romanian deadlifts (dumbbell)', equipment: ['dumbbells'] }, { name: 'Frog pumps', equipment: ['nothing'] }] },
+      { name: 'Frog pumps', type: 'isolation', equipment: ['nothing'], targets: 'Glutes',
+        alts: [{ name: 'Glute bridges', equipment: ['nothing'] }, { name: 'Hip thrusts', equipment: ['machines', 'barbell_bench'] }] },
     ]
   },
   calves: {
     soleus: [
-      { name: 'Seated calf raise', type: 'isolation', equipment: ['machines'], targets: 'Soleus (lower calf)', alt: { name: 'Standing calf raise', equipment: ['nothing'] } },
+      { name: 'Seated calf raise', type: 'isolation', equipment: ['machines'], targets: 'Soleus (lower calf)',
+        alts: [{ name: 'Standing calf raise', equipment: ['nothing'] }, { name: 'Single-leg calf raises', equipment: ['nothing'] }] },
+      { name: 'Standing calf raise', type: 'isolation', equipment: ['nothing'], targets: 'Gastrocnemius & Soleus',
+        alts: [{ name: 'Seated calf raise', equipment: ['machines'] }, { name: 'Single-leg calf raises', equipment: ['nothing'] }] },
     ],
     gastroc: [
-      { name: 'Machine calf raise', type: 'isolation', equipment: ['machines'], targets: 'Gastrocnemius (upper calf)', alt: { name: 'Dumbbell calf raise', equipment: ['dumbbells'] } },
-      { name: 'Dumbbell calf raise', type: 'isolation', equipment: ['dumbbells'], targets: 'Gastrocnemius', alt: { name: 'Standing calf raise', equipment: ['nothing'] } },
-      { name: 'Barbell calf raise', type: 'isolation', equipment: ['barbell', 'barbell_bench'], targets: 'Gastrocnemius', alt: { name: 'Dumbbell calf raise', equipment: ['dumbbells'] } },
-      { name: 'Standing calf raise', type: 'isolation', equipment: ['nothing'], targets: 'Gastrocnemius', alt: { name: 'Dumbbell calf raise', equipment: ['dumbbells'] } },
+      { name: 'Machine calf raise', type: 'isolation', equipment: ['machines'], targets: 'Gastrocnemius (upper calf)',
+        alts: [{ name: 'Dumbbell calf raise', equipment: ['dumbbells'] }, { name: 'Barbell calf raise', equipment: ['barbell', 'barbell_bench'] }, { name: 'Standing calf raise', equipment: ['nothing'] }, { name: 'Single-leg calf raises', equipment: ['nothing'] }] },
+      { name: 'Dumbbell calf raise', type: 'isolation', equipment: ['dumbbells'], targets: 'Gastrocnemius',
+        alts: [{ name: 'Machine calf raise', equipment: ['machines'] }, { name: 'Barbell calf raise', equipment: ['barbell', 'barbell_bench'] }, { name: 'Standing calf raise', equipment: ['nothing'] }, { name: 'Single-leg calf raises', equipment: ['nothing'] }] },
+      { name: 'Barbell calf raise', type: 'isolation', equipment: ['barbell', 'barbell_bench'], targets: 'Gastrocnemius',
+        alts: [{ name: 'Dumbbell calf raise', equipment: ['dumbbells'] }, { name: 'Machine calf raise', equipment: ['machines'] }, { name: 'Standing calf raise', equipment: ['nothing'] }] },
+      { name: 'Standing calf raise', type: 'isolation', equipment: ['nothing'], targets: 'Gastrocnemius',
+        alts: [{ name: 'Single-leg calf raises', equipment: ['nothing'] }, { name: 'Dumbbell calf raise', equipment: ['dumbbells'] }, { name: 'Machine calf raise', equipment: ['machines'] }] },
+      { name: 'Single-leg calf raises', type: 'isolation', equipment: ['nothing'], targets: 'Gastrocnemius',
+        alts: [{ name: 'Standing calf raise', equipment: ['nothing'] }, { name: 'Dumbbell calf raise', equipment: ['dumbbells'] }] },
     ]
   },
   biceps: {
     long: [
-      { name: 'Incline bicep curl', type: 'isolation', equipment: ['dumbbells', 'bench'], targets: 'Long head bicep', alt: { name: 'Dumbbell curl', equipment: ['dumbbells'] } },
-      { name: 'Behind-the-back cable curl', type: 'isolation', equipment: ['machines'], targets: 'Long head bicep', alt: { name: 'Incline bicep curl', equipment: ['dumbbells', 'bench'] } },
+      { name: 'Incline bicep curl', type: 'isolation', equipment: ['dumbbells', 'bench'], targets: 'Long head bicep',
+        alts: [{ name: 'Behind-the-back cable curl', equipment: ['machines'] }, { name: 'Dumbbell curl', equipment: ['dumbbells'] }, { name: 'Backpack curl', equipment: ['nothing'] }] },
+      { name: 'Behind-the-back cable curl', type: 'isolation', equipment: ['machines'], targets: 'Long head bicep',
+        alts: [{ name: 'Incline bicep curl', equipment: ['dumbbells', 'bench'] }, { name: 'Dumbbell curl', equipment: ['dumbbells'] }, { name: 'Backpack curl', equipment: ['nothing'] }] },
     ],
     short: [
-      { name: 'Wide-grip barbell curl', type: 'isolation', equipment: ['barbell', 'barbell_bench'], targets: 'Short head bicep', alt: { name: 'Wide-grip dumbbell curl', equipment: ['dumbbells'] } },
-      { name: 'Wide-grip dumbbell curl', type: 'isolation', equipment: ['dumbbells'], targets: 'Short head bicep', alt: { name: 'Preacher curl', equipment: ['dumbbells', 'bench'] } },
-      { name: 'Preacher curl', type: 'isolation', equipment: ['dumbbells', 'bench'], targets: 'Short head bicep', alt: { name: 'Wide-grip dumbbell curl', equipment: ['dumbbells'] } },
-      { name: 'Spyder curls', type: 'isolation', equipment: ['dumbbells', 'bench'], targets: 'Short head bicep', alt: { name: 'Wide-grip dumbbell curl', equipment: ['dumbbells'] } },
+      { name: 'Wide-grip barbell curl', type: 'isolation', equipment: ['barbell', 'barbell_bench'], targets: 'Short head bicep',
+        alts: [{ name: 'Wide-grip dumbbell curl', equipment: ['dumbbells'] }, { name: 'Preacher curl', equipment: ['dumbbells', 'bench'] }, { name: 'Concentration curls', equipment: ['dumbbells'] }, { name: 'Backpack curl', equipment: ['nothing'] }] },
+      { name: 'Wide-grip dumbbell curl', type: 'isolation', equipment: ['dumbbells'], targets: 'Short head bicep',
+        alts: [{ name: 'Wide-grip barbell curl', equipment: ['barbell', 'barbell_bench'] }, { name: 'Preacher curl', equipment: ['dumbbells', 'bench'] }, { name: 'Concentration curls', equipment: ['dumbbells'] }, { name: 'Backpack curl', equipment: ['nothing'] }] },
+      { name: 'Preacher curl', type: 'isolation', equipment: ['dumbbells', 'bench'], targets: 'Short head bicep',
+        alts: [{ name: 'Wide-grip dumbbell curl', equipment: ['dumbbells'] }, { name: 'Concentration curls', equipment: ['dumbbells'] }, { name: 'Wide-grip barbell curl', equipment: ['barbell', 'barbell_bench'] }, { name: 'Backpack curl', equipment: ['nothing'] }] },
+      { name: 'Spyder curls', type: 'isolation', equipment: ['dumbbells', 'bench'], targets: 'Short head bicep',
+        alts: [{ name: 'Preacher curl', equipment: ['dumbbells', 'bench'] }, { name: 'Wide-grip dumbbell curl', equipment: ['dumbbells'] }, { name: 'Backpack curl', equipment: ['nothing'] }] },
+      { name: 'Concentration curls', type: 'isolation', equipment: ['dumbbells'], targets: 'Short head bicep',
+        alts: [{ name: 'Preacher curl', equipment: ['dumbbells', 'bench'] }, { name: 'Wide-grip dumbbell curl', equipment: ['dumbbells'] }, { name: 'Backpack curl', equipment: ['nothing'] }] },
     ],
     brachialis: [
-      { name: 'Hammer curl', type: 'isolation', equipment: ['dumbbells'], targets: 'Brachialis, long head bicep', alt: { name: 'Cross-body hammer curl', equipment: ['dumbbells'] } },
-      { name: 'Cross-body hammer curl', type: 'isolation', equipment: ['dumbbells'], targets: 'Brachialis, forearms', alt: { name: 'Hammer curl', equipment: ['dumbbells'] } },
-      { name: 'Backpack hammer curl', type: 'isolation', equipment: ['nothing'], targets: 'Brachialis', alt: { name: 'Hammer curl', equipment: ['dumbbells'] } },
+      { name: 'Hammer curl', type: 'isolation', equipment: ['dumbbells'], targets: 'Brachialis, long head bicep',
+        alts: [{ name: 'Cross-body hammer curl', equipment: ['dumbbells'] }, { name: 'Ez-bar curl', equipment: ['barbell', 'barbell_bench'] }, { name: 'Backpack hammer curl', equipment: ['nothing'] }] },
+      { name: 'Cross-body hammer curl', type: 'isolation', equipment: ['dumbbells'], targets: 'Brachialis',
+        alts: [{ name: 'Hammer curl', equipment: ['dumbbells'] }, { name: 'Ez-bar curl', equipment: ['barbell', 'barbell_bench'] }, { name: 'Backpack hammer curl', equipment: ['nothing'] }] },
+      { name: 'Ez-bar curl', type: 'isolation', equipment: ['barbell', 'barbell_bench'], targets: 'Brachialis, biceps',
+        alts: [{ name: 'Hammer curl', equipment: ['dumbbells'] }, { name: 'Barbell curl', equipment: ['barbell', 'barbell_bench'] }, { name: 'Backpack hammer curl', equipment: ['nothing'] }] },
+      { name: 'Backpack hammer curl', type: 'isolation', equipment: ['nothing'], targets: 'Brachialis',
+        alts: [{ name: 'Hammer curl', equipment: ['dumbbells'] }, { name: 'Ez-bar curl', equipment: ['barbell', 'barbell_bench'] }] },
     ],
     general: [
-      { name: 'Barbell curl', type: 'isolation', equipment: ['barbell', 'barbell_bench'], targets: 'Biceps (overall)', alt: { name: 'Dumbbell curl', equipment: ['dumbbells'] } },
-      { name: 'Dumbbell curl', type: 'isolation', equipment: ['dumbbells'], targets: 'Biceps (overall)', alt: { name: 'Barbell curl', equipment: ['barbell', 'barbell_bench'] } },
-      { name: 'Backpack curl', type: 'isolation', equipment: ['nothing'], targets: 'Biceps (overall)', alt: { name: 'Dumbbell curl', equipment: ['dumbbells'] } },
+      { name: 'Barbell curl', type: 'isolation', equipment: ['barbell', 'barbell_bench'], targets: 'Biceps (overall)',
+        alts: [{ name: 'Dumbbell curl', equipment: ['dumbbells'] }, { name: 'Cable curls', equipment: ['machines'] }, { name: 'Backpack curl', equipment: ['nothing'] }] },
+      { name: 'Dumbbell curl', type: 'isolation', equipment: ['dumbbells'], targets: 'Biceps (overall)',
+        alts: [{ name: 'Barbell curl', equipment: ['barbell', 'barbell_bench'] }, { name: 'Cable curls', equipment: ['machines'] }, { name: 'Backpack curl', equipment: ['nothing'] }] },
+      { name: 'Cable curls', type: 'isolation', equipment: ['machines'], targets: 'Biceps (overall)',
+        alts: [{ name: 'Dumbbell curl', equipment: ['dumbbells'] }, { name: 'Barbell curl', equipment: ['barbell', 'barbell_bench'] }, { name: 'Backpack curl', equipment: ['nothing'] }] },
+      { name: 'Backpack curl', type: 'isolation', equipment: ['nothing'], targets: 'Biceps (overall)',
+        alts: [{ name: 'Dumbbell curl', equipment: ['dumbbells'] }, { name: 'Barbell curl', equipment: ['barbell', 'barbell_bench'] }] },
     ]
   },
   triceps: {
-    medial: [
-      { name: 'Diamond push-ups', type: 'isolation', equipment: ['nothing'], targets: 'Medial head triceps', alt: { name: 'Close-grip bench press', equipment: ['barbell_bench'] } },
-      { name: 'Close-grip bench press', type: 'compound', equipment: ['barbell_bench'], targets: 'Medial/lateral head triceps, chest', alt: { name: 'Tricep kickbacks', equipment: ['dumbbells'] } },
-      { name: 'Tricep kickbacks', type: 'isolation', equipment: ['dumbbells'], targets: 'Medial head triceps', alt: { name: 'Diamond push-ups', equipment: ['nothing'] } },
-    ],
     long: [
-      { name: 'Overhead dumbbell extensions', type: 'isolation', equipment: ['dumbbells'], targets: 'Long head triceps', alt: { name: 'Overhead cable extensions', equipment: ['machines'] } },
-      { name: 'Overhead cable extensions', type: 'isolation', equipment: ['machines'], targets: 'Long head triceps', alt: { name: 'Overhead dumbbell extensions', equipment: ['dumbbells'] } },
-      { name: 'Overhead backpack extensions', type: 'isolation', equipment: ['nothing'], targets: 'Long head triceps', alt: { name: 'Overhead dumbbell extensions', equipment: ['dumbbells'] } },
-      { name: 'Skull crushers (dumbbell)', type: 'isolation', equipment: ['dumbbells', 'bench'], targets: 'Long head triceps', alt: { name: 'Overhead dumbbell extensions', equipment: ['dumbbells'] } },
-      { name: 'Skull crushers (barbell)', type: 'isolation', equipment: ['barbell_bench'], targets: 'Long head triceps', alt: { name: 'Skull crushers (dumbbell)', equipment: ['dumbbells', 'bench'] } },
-      { name: 'Cable rope pushdowns', type: 'isolation', equipment: ['machines'], targets: 'Long head triceps', alt: { name: 'Overhead cable extensions', equipment: ['machines'] } },
-      { name: 'Machine tricep extension', type: 'isolation', equipment: ['machines'], targets: 'Long head triceps', alt: { name: 'Cable rope pushdowns', equipment: ['machines'] } },
+      { name: 'Overhead dumbbell extensions', type: 'isolation', equipment: ['dumbbells'], targets: 'Long head triceps',
+        alts: [{ name: 'Overhead cable extensions', equipment: ['machines'] }, { name: 'Skull crushers (dumbbell)', equipment: ['dumbbells', 'bench'] }, { name: 'Overhead backpack extensions', equipment: ['nothing'] }] },
+      { name: 'Overhead cable extensions', type: 'isolation', equipment: ['machines'], targets: 'Long head triceps',
+        alts: [{ name: 'Overhead dumbbell extensions', equipment: ['dumbbells'] }, { name: 'Cable rope pushdowns', equipment: ['machines'] }, { name: 'Overhead backpack extensions', equipment: ['nothing'] }] },
+      { name: 'Skull crushers (dumbbell)', type: 'isolation', equipment: ['dumbbells', 'bench'], targets: 'Long head triceps',
+        alts: [{ name: 'Overhead dumbbell extensions', equipment: ['dumbbells'] }, { name: 'Skull crushers (barbell)', equipment: ['barbell_bench'] }, { name: 'Overhead backpack extensions', equipment: ['nothing'] }] },
+      { name: 'Skull crushers (barbell)', type: 'isolation', equipment: ['barbell_bench'], targets: 'Long head triceps',
+        alts: [{ name: 'Skull crushers (dumbbell)', equipment: ['dumbbells', 'bench'] }, { name: 'Overhead cable extensions', equipment: ['machines'] }, { name: 'Overhead dumbbell extensions', equipment: ['dumbbells'] }] },
+      { name: 'Cable rope pushdowns', type: 'isolation', equipment: ['machines'], targets: 'Long head triceps',
+        alts: [{ name: 'Overhead cable extensions', equipment: ['machines'] }, { name: 'Overhead dumbbell extensions', equipment: ['dumbbells'] }, { name: 'Overhead backpack extensions', equipment: ['nothing'] }] },
+      { name: 'Machine tricep extension', type: 'isolation', equipment: ['machines'], targets: 'Triceps (overall)',
+        alts: [{ name: 'Cable rope pushdowns', equipment: ['machines'] }, { name: 'Overhead dumbbell extensions', equipment: ['dumbbells'] }, { name: 'Overhead backpack extensions', equipment: ['nothing'] }] },
+      { name: 'Overhead backpack extensions', type: 'isolation', equipment: ['nothing'], targets: 'Long head triceps',
+        alts: [{ name: 'Overhead dumbbell extensions', equipment: ['dumbbells'] }, { name: 'Overhead cable extensions', equipment: ['machines'] }, { name: 'Diamond push-ups', equipment: ['nothing'] }] },
     ],
     lateral: [
-      { name: 'Cable bar pushdowns', type: 'isolation', equipment: ['machines'], targets: 'Lateral head triceps', alt: { name: 'Skull crushers (dumbbell)', equipment: ['dumbbells', 'bench'] } },
-      { name: 'Dips', type: 'compound', equipment: ['nothing'], targets: 'Lateral head triceps, chest', alt: { name: 'Diamond push-ups', equipment: ['nothing'] } },
+      { name: 'Cable bar pushdowns', type: 'isolation', equipment: ['machines'], targets: 'Lateral head triceps',
+        alts: [{ name: 'Skull crushers (dumbbell)', equipment: ['dumbbells', 'bench'] }, { name: 'Close-grip bench press', equipment: ['barbell_bench'] }, { name: 'Diamond push-ups', equipment: ['nothing'] }] },
+      { name: 'Dips', type: 'compound', equipment: ['nothing'], targets: 'Lateral head triceps, chest',
+        alts: [{ name: 'Close-grip bench press', equipment: ['barbell_bench'] }, { name: 'Diamond push-ups', equipment: ['nothing'] }, { name: 'Cable bar pushdowns', equipment: ['machines'] }] },
+      { name: 'Close-grip bench press', type: 'compound', equipment: ['barbell_bench'], targets: 'Medial/lateral head triceps, chest',
+        alts: [{ name: 'Cable bar pushdowns', equipment: ['machines'] }, { name: 'Skull crushers (barbell)', equipment: ['barbell_bench'] }, { name: 'Diamond push-ups', equipment: ['nothing'] }] },
+    ],
+    medial: [
+      { name: 'Diamond push-ups', type: 'isolation', equipment: ['nothing'], targets: 'Medial head triceps',
+        alts: [{ name: 'Tricep kickbacks', equipment: ['dumbbells'] }, { name: 'Close-grip bench press', equipment: ['barbell_bench'] }, { name: 'Cable bar pushdowns', equipment: ['machines'] }] },
+      { name: 'Tricep kickbacks', type: 'isolation', equipment: ['dumbbells'], targets: 'Medial head triceps',
+        alts: [{ name: 'Diamond push-ups', equipment: ['nothing'] }, { name: 'Close-grip bench press', equipment: ['barbell_bench'] }, { name: 'Cable bar pushdowns', equipment: ['machines'] }] },
     ]
   },
   forearms: {
     brachioradialis: [
-      { name: 'Reverse barbell curl', type: 'isolation', equipment: ['barbell', 'barbell_bench'], targets: 'Brachioradialis', alt: { name: 'Reverse dumbbell curl', equipment: ['dumbbells'] } },
-      { name: 'Reverse dumbbell curl', type: 'isolation', equipment: ['dumbbells'], targets: 'Brachioradialis', alt: { name: 'Reverse barbell curl', equipment: ['barbell', 'barbell_bench'] } },
-      { name: 'Reverse backpack curl', type: 'isolation', equipment: ['nothing'], targets: 'Brachioradialis', alt: { name: 'Reverse dumbbell curl', equipment: ['dumbbells'] } },
+      { name: 'Reverse barbell curl', type: 'isolation', equipment: ['barbell', 'barbell_bench'], targets: 'Brachioradialis',
+        alts: [{ name: 'Reverse dumbbell curl', equipment: ['dumbbells'] }, { name: 'Hammer curl', equipment: ['dumbbells'] }, { name: 'Reverse backpack curl', equipment: ['nothing'] }] },
+      { name: 'Reverse dumbbell curl', type: 'isolation', equipment: ['dumbbells'], targets: 'Brachioradialis',
+        alts: [{ name: 'Hammer curl', equipment: ['dumbbells'] }, { name: 'Reverse barbell curl', equipment: ['barbell', 'barbell_bench'] }, { name: 'Reverse backpack curl', equipment: ['nothing'] }] },
+      { name: 'Hammer curl', type: 'isolation', equipment: ['dumbbells'], targets: 'Brachioradialis, biceps',
+        alts: [{ name: 'Reverse dumbbell curl', equipment: ['dumbbells'] }, { name: 'Reverse barbell curl', equipment: ['barbell', 'barbell_bench'] }, { name: 'Reverse backpack curl', equipment: ['nothing'] }] },
+      { name: 'Reverse backpack curl', type: 'isolation', equipment: ['nothing'], targets: 'Brachioradialis',
+        alts: [{ name: 'Reverse dumbbell curl', equipment: ['dumbbells'] }, { name: 'Reverse barbell curl', equipment: ['barbell', 'barbell_bench'] }] },
     ],
     flexor: [
-      { name: 'Dumbbell wrist curls', type: 'isolation', equipment: ['dumbbells'], targets: 'Forearm flexors', alt: { name: 'Barbell wrist curls', equipment: ['barbell', 'barbell_bench'] } },
-      { name: 'Barbell wrist curls', type: 'isolation', equipment: ['barbell', 'barbell_bench'], targets: 'Forearm flexors', alt: { name: 'Dumbbell wrist curls', equipment: ['dumbbells'] } },
-      { name: 'Cable wrist curls', type: 'isolation', equipment: ['machines'], targets: 'Forearm flexors', alt: { name: 'Dumbbell wrist curls', equipment: ['dumbbells'] } },
-      { name: 'Dead-hangs', type: 'isolation', equipment: ['pullup_bar'], targets: 'Grip, forearm flexors', alt: { name: 'Dumbbell wrist curls', equipment: ['dumbbells'] } },
+      { name: 'Dumbbell wrist curls', type: 'isolation', equipment: ['dumbbells'], targets: 'Forearm flexors',
+        alts: [{ name: 'Barbell wrist curls', equipment: ['barbell', 'barbell_bench'] }, { name: 'Cable wrist curls', equipment: ['machines'] }, { name: 'Dead-hangs', equipment: ['pullup_bar'] }] },
+      { name: 'Barbell wrist curls', type: 'isolation', equipment: ['barbell', 'barbell_bench'], targets: 'Forearm flexors',
+        alts: [{ name: 'Dumbbell wrist curls', equipment: ['dumbbells'] }, { name: 'Cable wrist curls', equipment: ['machines'] }] },
+      { name: 'Cable wrist curls', type: 'isolation', equipment: ['machines'], targets: 'Forearm flexors',
+        alts: [{ name: 'Dumbbell wrist curls', equipment: ['dumbbells'] }, { name: 'Barbell wrist curls', equipment: ['barbell', 'barbell_bench'] }] },
+      { name: 'Dead-hangs', type: 'isolation', equipment: ['pullup_bar'], targets: 'Grip, forearm flexors',
+        alts: [{ name: 'Dumbbell wrist curls', equipment: ['dumbbells'] }, { name: 'Barbell wrist curls', equipment: ['barbell', 'barbell_bench'] }] },
     ],
     extensor: [
-      { name: 'Dumbbell reverse wrist curls', type: 'isolation', equipment: ['dumbbells'], targets: 'Forearm extensors', alt: { name: 'Barbell reverse wrist curls', equipment: ['barbell', 'barbell_bench'] } },
-      { name: 'Barbell reverse wrist curls', type: 'isolation', equipment: ['barbell', 'barbell_bench'], targets: 'Forearm extensors', alt: { name: 'Dumbbell reverse wrist curls', equipment: ['dumbbells'] } },
-      { name: 'Cable reverse wrist curls', type: 'isolation', equipment: ['machines'], targets: 'Forearm extensors', alt: { name: 'Dumbbell reverse wrist curls', equipment: ['dumbbells'] } },
-      { name: 'Backpack reverse wrist curls', type: 'isolation', equipment: ['nothing'], targets: 'Forearm extensors', alt: { name: 'Dumbbell reverse wrist curls', equipment: ['dumbbells'] } },
+      { name: 'Dumbbell reverse wrist curls', type: 'isolation', equipment: ['dumbbells'], targets: 'Forearm extensors',
+        alts: [{ name: 'Barbell reverse wrist curls', equipment: ['barbell', 'barbell_bench'] }, { name: 'Cable reverse wrist curls', equipment: ['machines'] }, { name: 'Backpack reverse wrist curls', equipment: ['nothing'] }] },
+      { name: 'Barbell reverse wrist curls', type: 'isolation', equipment: ['barbell', 'barbell_bench'], targets: 'Forearm extensors',
+        alts: [{ name: 'Dumbbell reverse wrist curls', equipment: ['dumbbells'] }, { name: 'Cable reverse wrist curls', equipment: ['machines'] }, { name: 'Backpack reverse wrist curls', equipment: ['nothing'] }] },
+      { name: 'Cable reverse wrist curls', type: 'isolation', equipment: ['machines'], targets: 'Forearm extensors',
+        alts: [{ name: 'Dumbbell reverse wrist curls', equipment: ['dumbbells'] }, { name: 'Backpack reverse wrist curls', equipment: ['nothing'] }] },
+      { name: 'Backpack reverse wrist curls', type: 'isolation', equipment: ['nothing'], targets: 'Forearm extensors',
+        alts: [{ name: 'Dumbbell reverse wrist curls', equipment: ['dumbbells'] }, { name: 'Barbell reverse wrist curls', equipment: ['barbell', 'barbell_bench'] }] },
     ]
   },
   abs: {
     upper: [
-      { name: 'Crunches', type: 'isolation', equipment: ['nothing'], targets: 'Upper abs', alt: { name: 'Sit-ups', equipment: ['nothing'] } },
-      { name: 'Sit-ups', type: 'isolation', equipment: ['nothing'], targets: 'Upper abs (full ROM)', alt: { name: 'Crunches', equipment: ['nothing'] } },
+      { name: 'Crunches', type: 'isolation', equipment: ['nothing'], targets: 'Upper abs',
+        alts: [{ name: 'Sit-ups', equipment: ['nothing'] }, { name: 'Cable crunch', equipment: ['machines'] }] },
+      { name: 'Sit-ups', type: 'isolation', equipment: ['nothing'], targets: 'Upper abs (full ROM)',
+        alts: [{ name: 'Crunches', equipment: ['nothing'] }, { name: 'Cable crunch', equipment: ['machines'] }] },
+      { name: 'Cable crunch', type: 'isolation', equipment: ['machines'], targets: 'Upper abs',
+        alts: [{ name: 'Crunches', equipment: ['nothing'] }, { name: 'Sit-ups', equipment: ['nothing'] }] },
     ],
     lower: [
-      { name: 'Lying leg raises', type: 'isolation', equipment: ['nothing'], targets: 'Lower abs', alt: { name: 'Flutter kicks', equipment: ['nothing'] } },
-      { name: 'Flutter kicks', type: 'isolation', equipment: ['nothing'], targets: 'Lower abs', alt: { name: 'Lying leg raises', equipment: ['nothing'] } },
-      { name: 'Hanging knee raises', type: 'isolation', equipment: ['pullup_bar'], targets: 'Lower abs, hip flexors', alt: { name: 'Lying leg raises', equipment: ['nothing'] } },
-      { name: 'Hanging leg raises', type: 'isolation', equipment: ['pullup_bar'], targets: 'Lower abs, hip flexors', alt: { name: 'Lying leg raises', equipment: ['nothing'] } },
+      { name: 'Lying leg raises', type: 'isolation', equipment: ['nothing'], targets: 'Lower abs',
+        alts: [{ name: 'Flutter kicks', equipment: ['nothing'] }, { name: 'Hanging knee raises', equipment: ['pullup_bar'] }, { name: 'Hanging leg raises', equipment: ['pullup_bar'] }] },
+      { name: 'Flutter kicks', type: 'isolation', equipment: ['nothing'], targets: 'Lower abs',
+        alts: [{ name: 'Lying leg raises', equipment: ['nothing'] }, { name: 'Hanging knee raises', equipment: ['pullup_bar'] }] },
+      { name: 'Hanging knee raises', type: 'isolation', equipment: ['pullup_bar'], targets: 'Lower abs, hip flexors',
+        alts: [{ name: 'Hanging leg raises', equipment: ['pullup_bar'] }, { name: 'Lying leg raises', equipment: ['nothing'] }, { name: 'Flutter kicks', equipment: ['nothing'] }] },
+      { name: 'Hanging leg raises', type: 'isolation', equipment: ['pullup_bar'], targets: 'Lower abs, hip flexors',
+        alts: [{ name: 'Hanging knee raises', equipment: ['pullup_bar'] }, { name: 'Lying leg raises', equipment: ['nothing'] }, { name: 'Flutter kicks', equipment: ['nothing'] }] },
     ],
     obliques: [
-      { name: 'Side crunches', type: 'isolation', equipment: ['nothing'], targets: 'Obliques', alt: { name: 'Side hanging leg raises', equipment: ['pullup_bar'] } },
-      { name: 'Side hanging leg raises', type: 'isolation', equipment: ['pullup_bar'], targets: 'Obliques, lower abs', alt: { name: 'Side crunches', equipment: ['nothing'] } },
+      { name: 'Side crunches', type: 'isolation', equipment: ['nothing'], targets: 'Obliques',
+        alts: [{ name: 'Side hanging leg raises', equipment: ['pullup_bar'] }, { name: 'Russian twists', equipment: ['nothing'] }] },
+      { name: 'Side hanging leg raises', type: 'isolation', equipment: ['pullup_bar'], targets: 'Obliques, lower abs',
+        alts: [{ name: 'Side crunches', equipment: ['nothing'] }, { name: 'Russian twists', equipment: ['nothing'] }] },
+      { name: 'Russian twists', type: 'isolation', equipment: ['nothing'], targets: 'Obliques',
+        alts: [{ name: 'Side crunches', equipment: ['nothing'] }, { name: 'Side hanging leg raises', equipment: ['pullup_bar'] }] },
     ]
   }
 };
@@ -575,18 +706,18 @@ const DB = {
 // ─────────────────────────────────────────────
 function hasEquip(needed) {
   const eq = state.equipment;
-  if (needed.length === 0) return true;
-  // "nothing" equipment means bodyweight/backpack — any item from DB with ['nothing'] is allowed
-  if (eq.includes('nothing') && needed.includes('nothing')) return true;
-  if (eq.includes('nothing') && !needed.some(n => n !== 'nothing')) return true;
-  // for real equipment, ALL needed items must be available
-  // but treat barbell_bench as including barbell
-  const available = [...eq];
-  if (available.includes('barbell_bench')) available.push('barbell_implicit');
+  if (!needed || needed.length === 0) return true;
+  // bodyweight exercise — allowed when user has nothing OR always (since abs/pushups etc)
+  if (needed.every(n => n === 'nothing')) {
+    return eq.includes('nothing') || eq.includes('dumbbells') || eq.includes('barbell') ||
+           eq.includes('barbell_bench') || eq.includes('machines') || eq.includes('pullup_bar') || eq.includes('bench');
+  }
+  // check each required item
   return needed.every(n => {
-    if (n === 'nothing') return eq.includes('nothing');
+    if (n === 'nothing') return true; // already handled above
     if (n === 'barbell') return eq.includes('barbell') || eq.includes('barbell_bench');
-    return available.includes(n);
+    if (n === 'barbell_bench') return eq.includes('barbell_bench');
+    return eq.includes(n);
   });
 }
 
@@ -594,24 +725,32 @@ function canDoExercise(ex) {
   return hasEquip(ex.equipment);
 }
 
+// Pick exercise from pool: compound first, filter by equipment, no duplicates
+// Falls back through full pool if needed
 function pickExercise(pool, usedNames) {
-  // prioritize compound first, then isolation; filter by equipment; avoid duplicates
   const available = pool.filter(ex => canDoExercise(ex) && !usedNames.has(ex.name));
   const compounds = available.filter(ex => ex.type === 'compound');
   const isolations = available.filter(ex => ex.type === 'isolation');
-  if (compounds.length > 0) return compounds[0];
-  if (isolations.length > 0) return isolations[0];
+  return compounds[0] || isolations[0] || null;
+}
+
+// Get best available alternate for an exercise.
+// Scans ex.alts[] in order, returns first one the user can do and hasn't done yet.
+// usedNames optional — if provided, skips already-used exercises.
+function getBestAlt(ex, usedNames) {
+  if (!ex.alts || ex.alts.length === 0) return null;
+  for (const alt of ex.alts) {
+    if (canDoExercise(alt) && (!usedNames || !usedNames.has(alt.name))) {
+      return alt;
+    }
+  }
+  // no unused alt — allow a used one if it's doable (better than nothing)
+  for (const alt of ex.alts) {
+    if (canDoExercise(alt)) return alt;
+  }
   return null;
 }
 
-function getAlt(ex) {
-  if (!ex.alt) return null;
-  if (!canDoExercise(ex.alt)) {
-    // try to find any other exercise for same part
-    return { name: 'No equipment-compatible alternate available', equipment: [] };
-  }
-  return ex.alt;
-}
 
 // ─────────────────────────────────────────────
 // WORKOUT BUILDER
@@ -893,9 +1032,10 @@ function renderWorkout(sections) {
     `;
 
     section.exercises.forEach((ex, ei) => {
-      const altAvail = ex.alt && canDoExercise(ex.alt);
-      const altName = ex.alt ? ex.alt.name : null;
-      const altEquip = ex.alt ? ex.alt.equipment : [];
+      // getBestAlt scans ex.alts[] for the first one the user can actually do
+      const bestAlt = getBestAlt(ex, null);
+      const altName = bestAlt ? bestAlt.name : null;
+      const altEquip = bestAlt ? bestAlt.equipment : [];
       const cardId = `card-${si}-${ei}`;
       const altPanelId = `alt-${si}-${ei}`;
       const delay = (si * 3 + ei) * 80;
@@ -936,7 +1076,7 @@ function renderWorkout(sections) {
           </div>
           <div class="alternate-panel" id="${altPanelId}">
             <p class="alt-label">Alternate exercise</p>
-            ${altAvail && altName ? `
+            ${altName ? `
               <p class="alt-name">${altName}</p>
               <div class="alt-tags">
                 <span class="alt-tag">${equipLabel(altEquip)}</span>
