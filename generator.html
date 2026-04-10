@@ -120,9 +120,11 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 .workout-title{font-family:'DM Serif Display',serif;font-size:clamp(28px,4.5vw,50px);letter-spacing:-1.8px;line-height:1.03;color:var(--ink);margin-bottom:14px}
 .workout-title em{color:var(--mint);font-style:italic}
 .workout-meta{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;margin-top:20px}
-.meta-pill{display:inline-flex;align-items:center;gap:8px;background:#ffffff;border:1px solid rgba(12,14,11,0.09);border-radius:100px;padding:6px 15px;font-size:13px;font-weight:500;color:var(--ink-soft);box-shadow:0 2px 8px rgba(12,14,11,0.06)}
+.meta-pill{display:inline-flex;align-items:center;gap:8px;background:#ffffff;border:1px solid rgba(12,14,11,0.09);border-radius:100px;padding:6px 15px;font-size:13px;font-weight:500;color:var(--ink-soft);box-shadow:0 2px 8px rgba(12,14,11,0.06);transition:transform 0.36s cubic-bezier(0.34,1.56,0.64,1),box-shadow 0.36s,border-color 0.22s;cursor:default}
+.meta-pill:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 8px 20px rgba(15,138,95,0.13);border-color:rgba(15,138,95,0.3)}
 .meta-pill .dot{width:7px;height:7px;border-radius:50%;background:var(--mint);animation:badgePulse 2.4s ease infinite;flex-shrink:0}
-.safety-box,.info-box{background:#ffffff;border:1px solid rgba(12,14,11,0.08);border-radius:18px;padding:24px 26px;margin-bottom:22px;box-shadow:0 2px 12px rgba(12,14,11,0.06)}
+.safety-box,.info-box{background:#ffffff;border:1px solid rgba(12,14,11,0.08);border-radius:18px;padding:24px 26px;margin-bottom:22px;box-shadow:0 2px 12px rgba(12,14,11,0.06);transition:transform 0.42s cubic-bezier(0.34,1.56,0.64,1),box-shadow 0.42s,border-color 0.28s}
+.safety-box:hover,.info-box:hover{transform:translateY(-4px) scale(1.01);box-shadow:0 14px 36px rgba(12,14,11,0.1);border-color:rgba(15,138,95,0.22)}
 .info-box{border-color:rgba(15,138,95,0.22);background:#DFF4EC}
 .info-box-title,.safety-title{font-family:'DM Serif Display',serif;font-size:17px;color:var(--ink);margin-bottom:12px;letter-spacing:-0.3px;display:flex;align-items:center;gap:9px}
 .safety-icon{width:26px;height:26px;background:rgba(245,158,11,0.12);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px}
@@ -131,14 +133,17 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 .info-list li::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--mint);flex-shrink:0;margin-top:6px}
 .how-use-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 @media(max-width:500px){.how-use-grid{grid-template-columns:1fr}}
-.how-use-card{background:#ffffff;border:1px solid rgba(12,14,11,0.08);border-radius:13px;padding:15px 17px;box-shadow:0 1px 6px rgba(12,14,11,0.05)}
+.how-use-card{background:#ffffff;border:1px solid rgba(12,14,11,0.08);border-radius:13px;padding:15px 17px;box-shadow:0 1px 6px rgba(12,14,11,0.05);transition:transform 0.38s cubic-bezier(0.34,1.56,0.64,1),box-shadow 0.38s cubic-bezier(0.34,1.56,0.64,1),border-color 0.22s}
+.how-use-card:hover{transform:translateY(-4px) scale(1.02);box-shadow:0 10px 28px rgba(15,138,95,0.12);border-color:rgba(15,138,95,0.28)}
 .how-use-label{font-size:11px;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:5px}
 .how-use-val{font-size:20px;font-weight:600;color:var(--ink);letter-spacing:-0.4px;margin-bottom:3px}
 .how-use-desc{font-size:12px;font-weight:400;color:var(--ink-soft);line-height:1.5}
 .muscle-section{margin-bottom:44px}
-.muscle-section-header{display:flex;align-items:center;gap:11px;margin-bottom:16px;padding-bottom:12px;border-bottom:1.5px solid var(--border)}
+.muscle-section-header{display:flex;align-items:center;gap:11px;margin-bottom:16px;padding-bottom:12px;border-bottom:1.5px solid var(--border);transition:padding-left 0.32s cubic-bezier(0.34,1.56,0.64,1)}
+.muscle-section-header:hover{padding-left:4px}
+.muscle-section-tag{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--mint-dark);background:var(--mint-light);border:1.5px solid rgba(15,138,95,0.28);padding:4px 11px;border-radius:100px;transition:transform 0.36s cubic-bezier(0.34,1.56,0.64,1),box-shadow 0.36s}
+.muscle-section-header:hover .muscle-section-tag{transform:scale(1.06);box-shadow:0 4px 12px rgba(15,138,95,0.2)}
 .muscle-section-label{font-family:'DM Serif Display',serif;font-size:23px;letter-spacing:-0.5px;color:var(--ink)}
-.muscle-section-tag{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--mint-dark);background:var(--mint-light);border:1.5px solid rgba(15,138,95,0.28);padding:4px 11px;border-radius:100px}
 .exercise-card{background:#ffffff;border:1px solid rgba(12,14,11,0.08);border-radius:16px;padding:20px;margin-bottom:10px;box-shadow:0 2px 10px rgba(12,14,11,0.06);animation:exIn 0.48s cubic-bezier(0.22,1,0.36,1) both;transition:box-shadow 0.48s cubic-bezier(0.34,1.56,0.64,1),transform 0.48s cubic-bezier(0.34,1.56,0.64,1),border-color 0.28s}
 .exercise-card:hover{box-shadow:0 20px 48px rgba(15,138,95,0.15);transform:translateY(-6px) scale(1.012);border-color:rgba(15,138,95,0.32)}
 @keyframes exIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
@@ -734,19 +739,34 @@ function pickExercise(pool, usedNames) {
   return compounds[0] || isolations[0] || null;
 }
 
-// Get best available alternate for an exercise.
-// Scans ex.alts[] in order, returns first one the user can do and hasn't done yet.
-// usedNames optional — if provided, skips already-used exercises.
-function getBestAlt(ex, usedNames) {
+// Shuffle array in-place (Fisher-Yates)
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// Get a randomized alternate for an exercise.
+// Shuffles alts[], picks first one the user can do and hasn't been used as an alt yet.
+// usedAltNames tracks alt names already assigned across the whole workout.
+function getBestAlt(ex, usedAltNames) {
   if (!ex.alts || ex.alts.length === 0) return null;
-  for (const alt of ex.alts) {
-    if (canDoExercise(alt) && (!usedNames || !usedNames.has(alt.name))) {
+  // shuffle a copy so we don't mutate the DB
+  const candidates = shuffle([...ex.alts]);
+  // prefer: doable + not yet used as alt + not the primary exercise itself
+  for (const alt of candidates) {
+    if (canDoExercise(alt) && !usedAltNames.has(alt.name) && alt.name !== ex.name) {
+      usedAltNames.add(alt.name);
       return alt;
     }
   }
-  // no unused alt — allow a used one if it's doable (better than nothing)
-  for (const alt of ex.alts) {
-    if (canDoExercise(alt)) return alt;
+  // relax: doable + not primary (allow reuse of an alt)
+  for (const alt of candidates) {
+    if (canDoExercise(alt) && alt.name !== ex.name) {
+      return alt;
+    }
   }
   return null;
 }
@@ -1018,9 +1038,17 @@ function renderWorkout(sections) {
           <p class="how-use-val" style="font-size:15px">1 warmup + working sets</p>
           <p class="how-use-desc">Light warmup first, then push hard to near-failure</p>
         </div>
+        <div class="how-use-card" style="grid-column:1/-1">
+          <p class="how-use-label">Set structure</p>
+          <p class="how-use-val" style="font-size:15px">6–15 reps per working set</p>
+          <p class="how-use-desc">6–8 for strength · 8–12 for hypertrophy · 12–15 for endurance. Push every working set to or near failure. Full ROM on every rep.</p>
+        </div>
       </div>
     </div>
   `;
+
+  // track which alts have been assigned so each exercise gets a unique alternate
+  const usedAltNames = new Set();
 
   sections.forEach((section, si) => {
     html += `
@@ -1032,8 +1060,8 @@ function renderWorkout(sections) {
     `;
 
     section.exercises.forEach((ex, ei) => {
-      // getBestAlt scans ex.alts[] for the first one the user can actually do
-      const bestAlt = getBestAlt(ex, null);
+      // randomized alt — unique across the workout where possible
+      const bestAlt = getBestAlt(ex, usedAltNames);
       const altName = bestAlt ? bestAlt.name : null;
       const altEquip = bestAlt ? bestAlt.equipment : [];
       const cardId = `card-${si}-${ei}`;
@@ -1063,7 +1091,6 @@ function renderWorkout(sections) {
               ${ex.targets}
             </span>
           </div>
-          <p class="exercise-desc">Start with 1 warmup set (low weight, 8–10 reps), then push the remaining ${ex.sets - 1} sets hard. 6–15 reps per set — pick a range that matches your goal.</p>
           <div class="exercise-actions">
             <a class="btn-yt" href="${ytLink(ex.name)}" target="_blank" rel="noopener">
               <svg width="13" height="13" fill="none" viewBox="0 0 13 13"><rect x="1" y="2.5" width="11" height="8" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M5 5l3.5 1.5L5 8V5z" fill="currentColor"/></svg>
