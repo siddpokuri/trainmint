@@ -26,30 +26,92 @@ body{font-family:'DM Sans',sans-serif;background:#FAFDF9;color:var(--ink);min-he
 #bg-canvas.loaded{opacity:1}
 nav,.page{position:relative;z-index:1}
 
-.glass-btn-wrap{display:inline-block;position:relative;border-radius:100px;cursor:pointer;transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1),filter 0.4s cubic-bezier(0.34,1.56,0.64,1)}
-.glass-btn-wrap:hover{transform:translateY(-4px) scale(1.04)}
-.glass-btn-wrap:active{transform:translateY(1px) scale(0.97);transition-duration:0.1s}
-.glass-btn{display:inline-flex;align-items:center;gap:9px;border-radius:100px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;font-size:14px;letter-spacing:-0.01em;padding:12px 26px;text-decoration:none;border:none;position:relative;overflow:hidden;transition:background 0.22s,color 0.22s}
-.glass-btn::before{content:'';position:absolute;top:0;left:0;right:0;height:52%;background:linear-gradient(180deg,rgba(255,255,255,0.28) 0%,transparent 100%);border-radius:100px 100px 0 0;pointer-events:none;z-index:1}
-.glass-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.14) 0%,transparent 55%);border-radius:100px;pointer-events:none;z-index:1}
-.glass-btn span,.glass-btn svg{position:relative;z-index:2}
+.glass-btn-wrap{
+  display:inline-block;position:relative;border-radius:100px;cursor:pointer;
+  filter:drop-shadow(0 0 6px rgba(0,0,0,0.03)) drop-shadow(0 2px 6px rgba(0,0,0,0.10)) drop-shadow(0 0 12px rgba(255,255,255,0.20));
+  transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1),filter 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+.glass-btn-wrap:hover{
+  transform:translateY(-4px) scale(1.05);
+  filter:drop-shadow(0 0 8px rgba(0,0,0,0.05)) drop-shadow(0 8px 20px rgba(0,0,0,0.14)) drop-shadow(0 0 18px rgba(255,255,255,0.25));
+}
+.glass-btn-wrap:active{transform:translateY(2px) scale(0.97);transition-duration:0.1s}
+.glass-btn{
+  display:inline-flex;align-items:center;gap:9px;border-radius:100px;cursor:pointer;
+  font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;letter-spacing:0.01em;
+  padding:12px 26px;text-decoration:none;border:none;
+  position:relative;overflow:visible;
+  background:transparent;color:#0C0E0B;
+  transition:box-shadow 0.22s;
+}
+.glass-btn .liquid-shell{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  border-radius:100px;pointer-events:none;z-index:0;
+  box-shadow:
+    inset  3px  3px 0.5px -3px rgba(6,60,38,0.88),
+    inset -3px -3px 0.5px -3px rgba(6,60,38,0.82),
+    inset  1px  1px 1px  -0.5px rgba(6,60,38,0.58),
+    inset -1px -1px 1px  -0.5px rgba(6,60,38,0.58),
+    inset 0 0 6px 6px rgba(6,60,38,0.11),
+    inset 0 0 2px 2px rgba(6,60,38,0.05),
+    0 0 12px rgba(255,255,255,0.15);
+  transition:box-shadow 0.22s;
+}
+.glass-btn-wrap:hover .glass-btn .liquid-shell{
+  box-shadow:
+    inset  3px  3px 0.5px -3px rgba(6,60,38,0.88),
+    inset -3px -3px 0.5px -3px rgba(6,60,38,0.82),
+    inset  1px  1px 1px  -0.5px rgba(6,60,38,0.58),
+    inset -1px -1px 1px  -0.5px rgba(6,60,38,0.58),
+    inset 0 0 8px 8px rgba(6,60,38,0.09),
+    inset 0 0 3px 3px rgba(6,60,38,0.04),
+    0 0 20px rgba(255,255,255,0.28);
+}
+.glass-btn .liquid-distort{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  border-radius:100px;overflow:hidden;z-index:-1;
+  -webkit-backdrop-filter:url("#liquid-glass-filter") blur(4px) saturate(1.8);
+  backdrop-filter:url("#liquid-glass-filter") blur(4px) saturate(1.8);
+  pointer-events:none;
+}
+.glass-btn::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,0.75) 0%,rgba(255,255,255,0.20) 45%,transparent 100%);border-radius:100px 100px 0 0;pointer-events:none;z-index:1}
+.glass-btn::after{content:'';position:absolute;bottom:0;left:12%;right:12%;height:42%;background:radial-gradient(ellipse at 50% 115%,rgba(0,0,0,0.18) 0%,transparent 60%);pointer-events:none;z-index:1}
+.glass-btn span,.glass-btn svg{position:relative;z-index:2;color:#0C0E0B;text-shadow:0 1px 3px rgba(255,255,255,0.60)}
 .glass-btn svg{flex-shrink:0;transition:transform 0.36s cubic-bezier(0.34,1.56,0.64,1)}
 .glass-btn-wrap:hover .glass-btn-dark svg,.glass-btn-wrap:hover .glass-btn-mint svg{transform:translateX(4px)}
 .glass-btn-wrap:hover .glass-btn-ghost svg{transform:translateX(-3px)}
-.glass-btn-dark{background:linear-gradient(160deg,rgba(28,32,26,0.82) 0%,rgba(12,14,11,0.90) 100%);color:rgba(255,255,255,0.93);border:1px solid rgba(255,255,255,0.10);box-shadow:inset 0 1.5px 0 rgba(255,255,255,0.18),inset 0 -1.5px 0 rgba(0,0,0,0.32),0 4px 18px rgba(12,14,11,0.20);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
-.glass-btn-dark:hover{background:linear-gradient(160deg,rgba(44,50,40,0.88) 0%,rgba(20,24,18,0.94) 100%)}
-.glass-btn-dark:disabled,.glass-btn-dark[disabled]{opacity:0.3;cursor:not-allowed;pointer-events:none}
-.glass-btn-ghost{background:linear-gradient(160deg,rgba(255,255,255,0.55) 0%,rgba(223,244,236,0.45) 100%);color:var(--ink-soft);border:1.5px solid rgba(12,14,11,0.14);box-shadow:inset 0 1.5px 0 rgba(255,255,255,0.70),inset 0 -1px 0 rgba(12,14,11,0.06),0 4px 14px rgba(12,14,11,0.08);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);font-weight:500;font-size:13px;padding:11px 20px}
-.glass-btn-ghost:hover{background:linear-gradient(160deg,rgba(255,255,255,0.78) 0%,rgba(223,244,236,0.66) 100%);color:var(--ink)}
-.glass-btn-mint{background:linear-gradient(160deg,rgba(24,168,112,0.82) 0%,rgba(10,100,68,0.90) 100%);color:rgba(255,255,255,0.97);border:1px solid rgba(255,255,255,0.14);box-shadow:inset 0 1.5px 0 rgba(255,255,255,0.28),inset 0 -1.5px 0 rgba(0,0,0,0.20),0 4px 18px rgba(15,138,95,0.28);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);font-weight:700}
-.glass-btn-mint:hover{background:linear-gradient(160deg,rgba(32,192,128,0.88) 0%,rgba(14,122,80,0.94) 100%)}
-.glass-btn-mint:disabled,.glass-btn-mint[disabled]{opacity:0.3;cursor:not-allowed;pointer-events:none}
-
-.nav-glass-wrap{display:inline-block;border-radius:100px;transition:transform 0.36s cubic-bezier(0.34,1.56,0.64,1)}
-.nav-glass-wrap:hover{transform:translateY(-2px) scale(1.02)}
-.nav-glass-btn{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(160deg,rgba(255,255,255,0.55) 0%,rgba(223,244,236,0.45) 100%);color:var(--ink-soft);text-decoration:none;font-size:13px;font-weight:500;padding:10px 20px;border-radius:100px;border:1.5px solid rgba(12,14,11,0.12);letter-spacing:-0.01em;box-shadow:inset 0 1.5px 0 rgba(255,255,255,0.70),0 2px 10px rgba(12,14,11,0.08);position:relative;overflow:hidden;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
-.nav-glass-btn::before{content:'';position:absolute;top:0;left:0;right:0;height:52%;background:linear-gradient(180deg,rgba(255,255,255,0.40) 0%,transparent 100%);border-radius:100px 100px 0 0;pointer-events:none}
-.nav-glass-btn svg{position:relative;z-index:1;transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1)}
+.glass-btn-dark,.glass-btn-mint,.glass-btn-ghost{color:#0C0E0B}
+.glass-btn-dark span,.glass-btn-dark svg,.glass-btn-mint span,.glass-btn-mint svg,.glass-btn-ghost span,.glass-btn-ghost svg{color:#0C0E0B}
+.glass-btn-dark:disabled,.glass-btn-dark[disabled],.glass-btn-mint:disabled,.glass-btn-mint[disabled]{opacity:0.35;cursor:not-allowed;pointer-events:none}
+.glass-btn-ghost{font-size:13px;padding:11px 20px}
+.nav-glass-wrap{
+  display:inline-block;border-radius:100px;cursor:pointer;
+  filter:drop-shadow(0 0 6px rgba(0,0,0,0.03)) drop-shadow(0 2px 6px rgba(0,0,0,0.10));
+  transition:transform 0.36s cubic-bezier(0.34,1.56,0.64,1),filter 0.36s;
+}
+.nav-glass-wrap:hover{transform:translateY(-2px) scale(1.02);filter:drop-shadow(0 0 8px rgba(0,0,0,0.04)) drop-shadow(0 6px 16px rgba(0,0,0,0.14))}
+.nav-glass-btn{
+  display:inline-flex;align-items:center;gap:7px;
+  background:transparent;color:#0C0E0B;text-decoration:none;
+  font-size:13px;font-weight:700;padding:10px 20px;border-radius:100px;
+  border:none;letter-spacing:0.01em;
+  position:relative;overflow:visible;
+  text-shadow:0 1px 3px rgba(255,255,255,0.60);
+}
+.nav-glass-btn .liquid-shell{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  border-radius:100px;pointer-events:none;z-index:0;
+  box-shadow:inset 3px 3px 0.5px -3px rgba(6,60,38,0.88),inset -3px -3px 0.5px -3px rgba(6,60,38,0.82),inset 1px 1px 1px -0.5px rgba(6,60,38,0.58),inset -1px -1px 1px -0.5px rgba(6,60,38,0.58),inset 0 0 6px 6px rgba(6,60,38,0.11),inset 0 0 2px 2px rgba(6,60,38,0.05),0 0 12px rgba(255,255,255,0.15);
+}
+.nav-glass-btn .liquid-distort{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  border-radius:100px;overflow:hidden;z-index:-1;
+  -webkit-backdrop-filter:url("#liquid-glass-filter") blur(4px) saturate(1.8);
+  backdrop-filter:url("#liquid-glass-filter") blur(4px) saturate(1.8);
+  pointer-events:none;
+}
+.nav-glass-btn::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,0.75) 0%,rgba(255,255,255,0.20) 45%,transparent 100%);border-radius:100px 100px 0 0;pointer-events:none}
+.nav-glass-btn svg{position:relative;z-index:1;transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);color:#0C0E0B}
 .nav-glass-wrap:hover .nav-glass-btn svg{transform:translateX(-3px)}
 .nav-glass-btn span{position:relative;z-index:1}
 
@@ -92,7 +154,7 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 .choices{display:grid;gap:9px}
 .choice-card{background:#ffffff;border:1px solid rgba(12,14,11,0.09);border-radius:16px;padding:16px 20px;cursor:pointer;box-shadow:0 2px 10px rgba(12,14,11,0.06);user-select:none;display:flex;align-items:flex-start;gap:13px;transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1),box-shadow 0.4s cubic-bezier(0.34,1.56,0.64,1),border-color 0.22s}
 .choice-card:hover{transform:translateY(-2px) scale(1.008);border-color:rgba(15,138,95,0.42);box-shadow:0 8px 24px rgba(15,138,95,0.10)}
-.choice-card.selected{border-color:var(--mint);background:#DFF4EC;box-shadow:0 4px 16px rgba(15,138,95,0.14)}
+.choice-card.selected{border-color:var(--mint);background:var(--mint-light);box-shadow:0 4px 16px rgba(15,138,95,0.14)}
 .choice-radio{width:20px;height:20px;border-radius:50%;border:2px solid rgba(12,14,11,0.2);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:border-color 0.18s,background 0.18s;background:#ffffff;position:relative;z-index:1}
 .choice-card.selected .choice-radio{border-color:var(--mint);background:var(--mint)}
 .choice-card.selected .choice-radio::after{content:'';width:8px;height:8px;background:white;border-radius:50%}
@@ -105,7 +167,7 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 .choice-time{font-size:12px;font-weight:700;color:var(--mint-dark);background:var(--mint-light);padding:3px 10px;border-radius:100px;border:1px solid rgba(15,138,95,0.25);margin-left:auto;flex-shrink:0;align-self:center;position:relative;z-index:1}
 
 .muscles-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
-.muscle-chip{display:inline-flex;align-items:center;gap:6px;padding:9px 17px;border-radius:100px;background:#ffffff;border:1px solid rgba(12,14,11,0.10);cursor:pointer;font-size:14px;font-weight:600;color:var(--ink-soft);user-select:none;box-shadow:0 2px 8px rgba(12,14,11,0.06);transition:transform 0.36s cubic-bezier(0.34,1.56,0.64,1),border-color 0.22s,background 0.22s,color 0.22s,box-shadow 0.36s}
+.muscle-chip{display:inline-flex;align-items:center;gap:6px;padding:9px 17px;border-radius:100px;background:#ffffff;border:1.5px solid rgba(15,138,95,0.3);cursor:pointer;font-size:14px;font-weight:600;color:var(--ink-soft);user-select:none;box-shadow:0 2px 8px rgba(12,14,11,0.06);transition:transform 0.36s cubic-bezier(0.34,1.56,0.64,1),border-color 0.22s,background 0.22s,color 0.22s,box-shadow 0.36s}
 .muscle-chip:hover{border-color:rgba(15,138,95,0.45);color:var(--ink);transform:translateY(-2px) scale(1.03);box-shadow:0 5px 14px rgba(15,138,95,0.16)}
 .muscle-chip.selected{background:rgba(15,138,95,0.88);color:white;border-color:transparent;box-shadow:0 4px 14px rgba(15,138,95,0.32);transform:translateY(-2px) scale(1.03);backdrop-filter:blur(14px)}
 .muscle-chip.disabled{opacity:0.35;cursor:not-allowed;pointer-events:none;transform:none}
@@ -125,7 +187,7 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 .meta-pill .dot{width:7px;height:7px;border-radius:50%;background:var(--mint);animation:badgePulse 2.4s ease infinite;flex-shrink:0}
 .safety-box,.info-box{background:#ffffff;border:1px solid rgba(12,14,11,0.08);border-radius:18px;padding:24px 26px;margin-bottom:22px;box-shadow:0 2px 12px rgba(12,14,11,0.06);transition:transform 0.42s cubic-bezier(0.34,1.56,0.64,1),box-shadow 0.42s,border-color 0.28s}
 .safety-box:hover,.info-box:hover{transform:translateY(-4px) scale(1.01);box-shadow:0 14px 36px rgba(12,14,11,0.1);border-color:rgba(15,138,95,0.22)}
-.info-box{border-color:rgba(15,138,95,0.22);background:#DFF4EC}
+.info-box{border-color:rgba(15,138,95,0.22);background:var(--mint-light)}
 .info-box-title,.safety-title{font-family:'DM Serif Display',serif;font-size:17px;color:var(--ink);margin-bottom:12px;letter-spacing:-0.3px;display:flex;align-items:center;gap:9px}
 .safety-icon{width:26px;height:26px;background:rgba(245,158,11,0.12);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px}
 .info-list{list-style:none;display:grid;gap:8px}
@@ -154,14 +216,14 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 .badge-isolation{background:#FEF3C7;color:#92400E;border:1px solid #FDE68A}
 .exercise-sets{font-size:13px;font-weight:600;color:var(--ink-muted);white-space:nowrap;position:relative;z-index:1}
 .exercise-meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:9px}
-.exercise-tag{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--ink-soft);background:#FAFDF9;border:1px solid rgba(12,14,11,0.1);padding:3px 9px;border-radius:100px;position:relative;z-index:1}
+.exercise-tag{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--ink-soft);background:var(--surface);border:1px solid rgba(12,14,11,0.1);padding:3px 9px;border-radius:100px;position:relative;z-index:1}
 .exercise-desc{font-size:13px;font-weight:400;color:var(--ink-soft);line-height:1.58;margin-bottom:13px;position:relative;z-index:1}
 .exercise-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;position:relative;z-index:1}
 .btn-yt-wrap,.btn-alt-wrap{display:inline-block;border-radius:100px;transition:transform 0.28s cubic-bezier(0.34,1.56,0.64,1)}
 .btn-yt-wrap:hover,.btn-alt-wrap:hover{transform:translateY(-2px)}
 .btn-yt{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--ink-soft);text-decoration:none;border:1.5px solid rgba(12,14,11,0.12);padding:6px 13px;border-radius:100px;background:#ffffff;box-shadow:0 1px 4px rgba(12,14,11,0.06);transition:color 0.16s,border-color 0.16s,background 0.16s}
 .btn-yt:hover{color:var(--danger);border-color:rgba(220,38,38,0.4);background:#FEF2F2}
-.btn-alternate{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--mint-dark);border:1.5px solid rgba(15,138,95,0.28);padding:6px 13px;border-radius:100px;background:#DFF4EC;cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 1px 4px rgba(12,14,11,0.06);transition:background 0.16s,border-color 0.16s}
+.btn-alternate{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;color:var(--mint-dark);border:1.5px solid rgba(15,138,95,0.28);padding:6px 13px;border-radius:100px;background:var(--mint-light);cursor:pointer;font-family:'DM Sans',sans-serif;box-shadow:0 1px 4px rgba(12,14,11,0.06);transition:background 0.16s,border-color 0.16s}
 .btn-alternate:hover{background:rgba(125,206,176,0.50);border-color:rgba(15,138,95,0.5)}
 .alternate-panel{display:none;margin-top:12px;padding:13px 16px;background:#FAFDF9;border:1px solid var(--border);border-radius:11px;font-size:14px}
 .alternate-panel.open{display:block;animation:fadeIn 0.2s ease}
@@ -175,11 +237,23 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 </style>
 </head>
 <body>
+<!-- Liquid glass SVG filter -->
+<svg class="liquid-glass-filter" aria-hidden="true" style="display:none">
+  <defs>
+    <filter id="liquid-glass-filter" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.05 0.05" numOctaves="1" seed="2" result="turbulence"/>
+      <feGaussianBlur in="turbulence" stdDeviation="2" result="blurredNoise"/>
+      <feDisplacementMap in="SourceGraphic" in2="blurredNoise" scale="55" xChannelSelector="R" yChannelSelector="B" result="displaced"/>
+      <feGaussianBlur in="displaced" stdDeviation="3" result="finalBlur"/>
+      <feComposite in="finalBlur" in2="finalBlur" operator="over"/>
+    </filter>
+  </defs>
+</svg>
 <canvas id="bg-canvas"></canvas>
 <nav>
   <a href="index.html" class="nav-logo">train<span>mint</span></a>
   <div class="nav-glass-wrap">
-    <a href="index.html" class="nav-glass-btn">
+    <a href="index.html" class="nav-glass-btn"><span class="liquid-shell" aria-hidden="true"></span><span class="liquid-distort" aria-hidden="true"></span>
       <svg width="13" height="13" fill="none" viewBox="0 0 14 14"><path d="M11 7H3M6 10L3 7l3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <span>Back home</span>
     </a>
@@ -205,7 +279,7 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
         <div class="choice-card blob-card" data-value="90" onclick="selectTime(this)"><div class="blob"></div><div class="choice-radio"></div><div class="choice-body"><p class="choice-title">1 hour 30 minutes</p><p class="choice-desc">Max session — high volume, multiple groups</p></div><span class="choice-time">90 min</span></div>
       </div>
       <div class="step-actions">
-        <div class="glass-btn-wrap"><button class="glass-btn glass-btn-dark" id="nextBtn1" onclick="goStep(2)" disabled><span>Continue</span><svg width="13" height="13" fill="none" viewBox="0 0 14 14"><path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+        <div class="glass-btn-wrap"><button class="glass-btn glass-btn-dark" id="nextBtn1" onclick="goStep(2)" disabled><span class="liquid-shell" aria-hidden="true"></span><span class="liquid-distort" aria-hidden="true"></span><span>Continue</span><svg width="13" height="13" fill="none" viewBox="0 0 14 14"><path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
       </div>
     </div>
     <!-- STEP 2 -->
@@ -219,8 +293,8 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
         <div class="choice-card blob-card" data-value="experienced" onclick="selectExp(this)"><div class="blob"></div><div class="choice-radio"></div><div class="choice-body"><p class="choice-title">Experienced</p><p class="choice-desc">1+ year of serious, consistent training. Strong mind-muscle connection and solid form.</p></div></div>
       </div>
       <div class="step-actions">
-        <div class="glass-btn-wrap"><button class="glass-btn glass-btn-ghost" onclick="goStep(1)"><svg width="13" height="13" fill="none" viewBox="0 0 14 14"><path d="M11 7H3M6 10L3 7l3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Back</span></button></div>
-        <div class="glass-btn-wrap"><button class="glass-btn glass-btn-dark" id="nextBtn2" onclick="goStep(3)" disabled><span>Continue</span><svg width="13" height="13" fill="none" viewBox="0 0 14 14"><path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+        <div class="glass-btn-wrap"><button class="glass-btn glass-btn-ghost" onclick="goStep(1)"><span class="liquid-shell" aria-hidden="true"></span><span class="liquid-distort" aria-hidden="true"></span><svg width="13" height="13" fill="none" viewBox="0 0 14 14"><path d="M11 7H3M6 10L3 7l3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Back</span></button></div>
+        <div class="glass-btn-wrap"><button class="glass-btn glass-btn-dark" id="nextBtn2" onclick="goStep(3)" disabled><span class="liquid-shell" aria-hidden="true"></span><span class="liquid-distort" aria-hidden="true"></span><span>Continue</span><svg width="13" height="13" fill="none" viewBox="0 0 14 14"><path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
       </div>
     </div>
     <!-- STEP 3 -->
@@ -243,8 +317,8 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
         <div class="muscle-chip" data-muscle="calves" onclick="toggleMuscle(this)">Calves</div>
       </div>
       <div class="step-actions">
-        <div class="glass-btn-wrap"><button class="glass-btn glass-btn-ghost" onclick="goStep(2)"><svg width="13" height="13" fill="none" viewBox="0 0 14 14"><path d="M11 7H3M6 10L3 7l3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Back</span></button></div>
-        <div class="glass-btn-wrap"><button class="glass-btn glass-btn-dark" id="nextBtn3" onclick="goStep(4)" disabled><span>Continue</span><svg width="13" height="13" fill="none" viewBox="0 0 14 14"><path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+        <div class="glass-btn-wrap"><button class="glass-btn glass-btn-ghost" onclick="goStep(2)"><span class="liquid-shell" aria-hidden="true"></span><span class="liquid-distort" aria-hidden="true"></span><svg width="13" height="13" fill="none" viewBox="0 0 14 14"><path d="M11 7H3M6 10L3 7l3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Back</span></button></div>
+        <div class="glass-btn-wrap"><button class="glass-btn glass-btn-dark" id="nextBtn3" onclick="goStep(4)" disabled><span class="liquid-shell" aria-hidden="true"></span><span class="liquid-distort" aria-hidden="true"></span><span>Continue</span><svg width="13" height="13" fill="none" viewBox="0 0 14 14"><path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
       </div>
     </div>
     <!-- STEP 4 -->
@@ -262,8 +336,8 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
         <div class="choice-card blob-card" data-equip="nothing" onclick="toggleEquipNothing(this)"><div class="blob"></div><div class="choice-check"></div><div class="choice-body"><p class="choice-title">Nothing / bodyweight only</p><p class="choice-desc">No equipment — or just a backpack as a weight</p></div></div>
       </div>
       <div class="step-actions">
-        <div class="glass-btn-wrap"><button class="glass-btn glass-btn-ghost" onclick="goStep(3)"><svg width="13" height="13" fill="none" viewBox="0 0 14 14"><path d="M11 7H3M6 10L3 7l3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Back</span></button></div>
-        <div class="glass-btn-wrap"><button class="glass-btn glass-btn-mint" id="nextBtn4" onclick="generateWorkout()" disabled><span>Build my workout</span><svg width="13" height="13" fill="none" viewBox="0 0 14 14"><path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+        <div class="glass-btn-wrap"><button class="glass-btn glass-btn-ghost" onclick="goStep(3)"><span class="liquid-shell" aria-hidden="true"></span><span class="liquid-distort" aria-hidden="true"></span><svg width="13" height="13" fill="none" viewBox="0 0 14 14"><path d="M11 7H3M6 10L3 7l3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Back</span></button></div>
+        <div class="glass-btn-wrap"><button class="glass-btn glass-btn-mint" id="nextBtn4" onclick="generateWorkout()" disabled><span class="liquid-shell" aria-hidden="true"></span><span class="liquid-distort" aria-hidden="true"></span><span>Build my workout</span><svg width="13" height="13" fill="none" viewBox="0 0 14 14"><path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
       </div>
     </div>
   </div>
@@ -1128,7 +1202,7 @@ function renderWorkout(sections) {
     <div class="reset-section">
       <p style="font-size:14px;color:var(--ink-muted);margin-bottom:20px;">Want to change something?</p>
       <div class="glass-btn-wrap">
-        <button class="glass-btn glass-btn-ghost" onclick="resetAll()" style="font-size:14px;padding:12px 28px;">
+        <button class="glass-btn glass-btn-ghost" onclick="resetAll()" style="font-size:14px;padding:12px 28px;"><span class="liquid-shell" aria-hidden="true"></span><span class="liquid-distort" aria-hidden="true"></span>
           <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><path d="M2 7a5 5 0 1 1 1.5 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M2 10.5V7h3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           <span>Start over</span>
         </button>
@@ -1273,7 +1347,7 @@ void main(){
   setTimeout(()=>canvas.classList.add('loaded'),100);
 
   let shaderTime=0, lastTs=null;
-  const BASE_RATE=0.00042;
+  const BASE_RATE=0.00065;
   (function loop(ts){
     const dt=lastTs===null ? 0 : ts-lastTs;
     lastTs=ts;
