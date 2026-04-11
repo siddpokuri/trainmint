@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy — trainmint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --mint:#0F8A5F;
+  --mint-light:#DFF4EC;
+  --mint-mid:#7DCEB0;
+  --mint-dark:#0A5C3E;
+  --ink:#0C0E0B;
+  --ink-soft:#222420;
+  --ink-muted:#424540;
+  --surface:#FAFDF9;
+  --white:#ffffff;
+  --border:rgba(12,14,11,0.09);
+  --border-strong:rgba(12,14,11,0.16);
+}
+
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:#FAFDF9;color:var(--ink);overflow-x:hidden}
+
+/* ── FULL-PAGE DITHERING CANVAS ── */
+#bg-canvas{
+  position:fixed;inset:0;width:100%;height:100%;z-index:0;
+  pointer-events:none;opacity:0;transition:opacity 1.4s ease;
+}
+#bg-canvas.loaded{opacity:1}
+nav,main,footer{position:relative;z-index:1}
+
+/* ── LIQUID GLASS FILTER ── */
+.liquid-glass-filter{display:none}
+
+/* NAV */
+.nav-glass-wrap{
+  display:inline-block;border-radius:100px;cursor:pointer;
+  filter:drop-shadow(0 0 6px rgba(0,0,0,0.03)) drop-shadow(0 2px 6px rgba(0,0,0,0.10));
+  transition:transform 0.36s cubic-bezier(0.34,1.56,0.64,1),filter 0.36s;
+}
+.nav-glass-wrap:hover{
+  transform:translateY(-2px) scale(1.02);
+  filter:drop-shadow(0 0 8px rgba(0,0,0,0.04)) drop-shadow(0 6px 16px rgba(0,0,0,0.14));
+}
+.nav-glass-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  background:transparent;color:#0C0E0B;text-decoration:none;
+  font-size:14px;font-weight:700;padding:10px 22px;border-radius:100px;
+  border:none;letter-spacing:0.01em;
+  position:relative;overflow:visible;
+  text-shadow:0 1px 3px rgba(255,255,255,0.60);
+}
+.nav-glass-btn .liquid-shell{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  border-radius:100px;pointer-events:none;z-index:0;
+  box-shadow:
+    inset  3px  3px 0.5px -3px rgba(6,60,38,0.88),
+    inset -3px -3px 0.5px -3px rgba(6,60,38,0.82),
+    inset  1px  1px 1px  -0.5px rgba(6,60,38,0.58),
+    inset -1px -1px 1px  -0.5px rgba(6,60,38,0.58),
+    inset 0 0 6px 6px rgba(6,60,38,0.11),
+    inset 0 0 2px 2px rgba(6,60,38,0.05),
+    0 0 12px rgba(255,255,255,0.15);
+}
+.nav-glass-btn .liquid-distort{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  border-radius:100px;overflow:hidden;z-index:-1;
+  -webkit-backdrop-filter:url("#liquid-glass-filter") blur(4px) saturate(1.8);
+  backdrop-filter:url("#liquid-glass-filter") blur(4px) saturate(1.8);
+  pointer-events:none;
+}
+.nav-glass-btn::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:50%;
+  background:linear-gradient(180deg,rgba(255,255,255,0.75) 0%,rgba(255,255,255,0.20) 45%,transparent 100%);
+  border-radius:100px 100px 0 0;pointer-events:none;
+}
+.nav-glass-btn svg{transition:transform 0.34s cubic-bezier(0.34,1.56,0.64,1);position:relative;z-index:1;color:#0C0E0B}
+.nav-glass-wrap:hover .nav-glass-btn svg{transform:translateX(-4px)}
+.nav-glass-btn span{position:relative;z-index:1}
+
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 48px;transition:background 0.5s,backdrop-filter 0.5s;
+}
+nav.scrolled{background:rgba(255,255,255,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-logo{
+  font-family:'DM Serif Display',serif;font-size:20px;color:var(--ink);
+  letter-spacing:-0.5px;text-decoration:none;
+}
+.nav-logo span{color:var(--mint)}
+
+/* ── HERO STRIP ── */
+.page-hero{
+  position:relative;
+  min-height:340px;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:flex-end;
+  text-align:center;
+  padding:0 24px 60px;
+  overflow:hidden;
+}
+.hero-mountain{
+  position:absolute;
+  bottom:-6%;left:50%;
+  transform:translateX(-50%);
+  width:clamp(900px,130vw,2000px);
+  pointer-events:none;z-index:1;
+  opacity:0.14;
+  filter:blur(1.5px) brightness(0.7);
+  user-select:none;
+}
+.page-hero-content{
+  position:relative;z-index:10;
+  padding-top:120px;
+  display:flex;flex-direction:column;align-items:center;
+}
+.page-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,0.88);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:1.5px solid rgba(15,138,95,0.38);color:var(--mint-dark);
+  font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
+  padding:6px 18px;border-radius:100px;margin-bottom:20px;
+  box-shadow:0 2px 12px rgba(12,14,11,0.08);
+  opacity:0;transform:translateY(14px);transition:opacity 0.7s ease,transform 0.7s ease;
+}
+.page-badge.visible{opacity:1;transform:translateY(0)}
+.page-title{
+  font-family:'DM Serif Display',serif;
+  font-size:clamp(42px,7vw,80px);
+  letter-spacing:-3px;color:var(--ink);line-height:0.95;
+  margin-bottom:16px;
+  opacity:0;transform:translateY(18px);transition:opacity 0.8s 0.1s ease,transform 0.8s 0.1s ease;
+}
+.page-title span{color:var(--mint)}
+.page-title.visible{opacity:1;transform:translateY(0)}
+.page-meta{
+  font-size:14px;color:var(--ink-muted);font-weight:400;
+  background:rgba(255,255,255,0.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-radius:100px;padding:6px 20px;
+  border:1px solid rgba(255,255,255,0.7);
+  box-shadow:0 2px 10px rgba(12,14,11,0.05);
+  opacity:0;transform:translateY(10px);transition:opacity 0.7s 0.22s ease,transform 0.7s 0.22s ease;
+}
+.page-meta.visible{opacity:1;transform:translateY(0)}
+
+/* ── CONTENT ── */
+main{
+  max-width:760px;margin:0 auto;
+  padding:56px 48px 100px;
+}
+@media(max-width:700px){main{padding:40px 24px 80px}}
+
+.policy-card{
+  background:#ffffff;
+  border:1px solid rgba(12,14,11,0.08);
+  border-radius:24px;
+  padding:44px 48px;
+  box-shadow:0 2px 24px rgba(12,14,11,0.07);
+  margin-bottom:16px;
+  opacity:0;transform:translateY(28px) scale(0.98);
+  transition:opacity 0.72s cubic-bezier(0.22,1,0.36,1),transform 0.72s cubic-bezier(0.22,1,0.36,1),box-shadow 0.4s,border-color 0.4s;
+}
+.policy-card.visible{opacity:1;transform:translateY(0) scale(1)}
+.policy-card:hover{box-shadow:0 16px 48px rgba(15,138,95,0.12);border-color:rgba(15,138,95,0.28)}
+@media(max-width:700px){.policy-card{padding:28px 24px}}
+
+.policy-section-label{
+  font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--mint);margin-bottom:10px;
+}
+.policy-h2{
+  font-family:'DM Serif Display',serif;
+  font-size:22px;letter-spacing:-0.5px;
+  color:var(--ink);margin-bottom:14px;line-height:1.15;
+}
+.policy-p{
+  font-size:15px;font-weight:400;color:var(--ink-soft);line-height:1.78;
+}
+.policy-p + .policy-p{margin-top:12px}
+.policy-ul{
+  list-style:none;padding:0;margin-top:14px;
+  display:flex;flex-direction:column;gap:8px;
+}
+.policy-ul li{
+  display:flex;align-items:flex-start;gap:10px;
+  font-size:15px;color:var(--ink-soft);line-height:1.65;
+}
+.policy-ul li::before{
+  content:'';
+  flex-shrink:0;
+  width:6px;height:6px;border-radius:50%;
+  background:var(--mint);margin-top:8px;
+}
+.policy-a{
+  color:var(--mint-dark);text-decoration:underline;text-underline-offset:3px;
+  text-decoration-color:rgba(10,92,62,0.35);
+  transition:color 0.2s,text-decoration-color 0.2s;
+}
+.policy-a:hover{color:var(--mint);text-decoration-color:var(--mint)}
+
+.divider{
+  width:40px;height:2px;background:var(--mint-light);
+  border-radius:2px;margin:0 0 18px;
+}
+
+/* ── FOOTER ── */
+footer{
+  border-top:1px solid var(--border);padding:28px 48px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;
+  background:#ffffff;
+}
+.footer-logo{font-family:'DM Serif Display',serif;font-size:18px;color:var(--ink);letter-spacing:-0.5px}
+.footer-logo span{color:var(--mint)}
+.footer-links{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.footer-note{font-size:13px;color:var(--ink-muted);font-weight:400}
+.footer-link{font-size:13px;color:var(--ink-muted);text-decoration:none;transition:color 0.2s}
+.footer-link:hover{color:var(--mint)}
+</style>
+</head>
+<body>
+
+<svg class="liquid-glass-filter" aria-hidden="true">
+  <defs>
+    <filter id="liquid-glass-filter" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.05 0.05" numOctaves="1" seed="2" result="turbulence"/>
+      <feGaussianBlur in="turbulence" stdDeviation="2" result="blurredNoise"/>
+      <feDisplacementMap in="SourceGraphic" in2="blurredNoise" scale="55" xChannelSelector="R" yChannelSelector="B" result="displaced"/>
+      <feGaussianBlur in="displaced" stdDeviation="3" result="finalBlur"/>
+      <feComposite in="finalBlur" in2="finalBlur" operator="over"/>
+    </filter>
+  </defs>
+</svg>
+<canvas id="bg-canvas"></canvas>
+
+<nav id="mainNav">
+  <a href="index.html" class="nav-logo">train<span>mint</span></a>
+  <div class="nav-glass-wrap">
+    <a href="index.html" class="nav-glass-btn">
+      <span class="liquid-shell" aria-hidden="true"></span>
+      <span class="liquid-distort" aria-hidden="true"></span>
+      <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><path d="M12 7H2M6 3L2 7l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Back to home</span>
+    </a>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <img src="mountain.png" alt="" class="hero-mountain" aria-hidden="true">
+  <div class="page-hero-content">
+    <div class="page-badge" id="pBadge">Legal</div>
+    <h1 class="page-title" id="pTitle">Privacy <span>Policy</span></h1>
+    <p class="page-meta" id="pMeta">Last updated · 2025</p>
+  </div>
+</div>
+
+<main>
+
+  <div class="policy-card" id="c0">
+    <p class="policy-section-label">Overview</p>
+    <div class="divider"></div>
+    <h2 class="policy-h2">Our commitment to your privacy</h2>
+    <p class="policy-p">Trainmint respects your privacy and is committed to protecting it. This policy outlines what data we collect, how we use it, and what that means for you.</p>
+  </div>
+
+  <div class="policy-card" id="c1">
+    <p class="policy-section-label">Data collection</p>
+    <div class="divider"></div>
+    <h2 class="policy-h2">Information we collect</h2>
+    <p class="policy-p">Trainmint does not collect personal information such as names, emails, or contact details.</p>
+    <p class="policy-p">We may collect anonymous usage data, including:</p>
+    <ul class="policy-ul">
+      <li>Pages visited and time spent on the site</li>
+      <li>Device type and browser information</li>
+      <li>General geographic location (such as city or country)</li>
+    </ul>
+  </div>
+
+  <div class="policy-card" id="c2">
+    <p class="policy-section-label">Analytics</p>
+    <div class="divider"></div>
+    <h2 class="policy-h2">Use of Google Analytics</h2>
+    <p class="policy-p">Trainmint uses Google Analytics to understand how users interact with the website. Google Analytics uses cookies and similar technologies to collect and analyze information about website usage.</p>
+  </div>
+
+  <div class="policy-card" id="c3">
+    <p class="policy-section-label">Cookies</p>
+    <div class="divider"></div>
+    <h2 class="policy-h2">How we use cookies</h2>
+    <p class="policy-p">Cookies are small data files stored on your device. Trainmint uses cookies to improve user experience and analyze website traffic. You can control cookie settings through your browser preferences.</p>
+  </div>
+
+  <div class="policy-card" id="c4">
+    <p class="policy-section-label">Purpose</p>
+    <div class="divider"></div>
+    <h2 class="policy-h2">How information is used</h2>
+    <p class="policy-p">The information collected is used only to:</p>
+    <ul class="policy-ul">
+      <li>Improve the website</li>
+      <li>Understand user behavior</li>
+      <li>Enhance performance and functionality</li>
+    </ul>
+  </div>
+
+  <div class="policy-card" id="c5">
+    <p class="policy-section-label">Third parties</p>
+    <div class="divider"></div>
+    <h2 class="policy-h2">Third-party services</h2>
+    <p class="policy-p">Google may process data collected through Google Analytics according to its own privacy policies. For more information, visit <a href="https://policies.google.com/privacy" class="policy-a" target="_blank" rel="noopener noreferrer">Google's Privacy Policy</a>.</p>
+  </div>
+
+  <div class="policy-card" id="c6">
+    <p class="policy-section-label">Consent</p>
+    <div class="divider"></div>
+    <h2 class="policy-h2">User consent</h2>
+    <p class="policy-p">By using Trainmint, you consent to the collection and use of information as described in this policy.</p>
+  </div>
+
+  <div class="policy-card" id="c7">
+    <p class="policy-section-label">Updates</p>
+    <div class="divider"></div>
+    <h2 class="policy-h2">Changes to this policy</h2>
+    <p class="policy-p">This privacy policy may be updated from time to time. Any updates will be posted on this page. We encourage you to review this page periodically to stay informed.</p>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-logo">train<span>mint</span></div>
+  <div class="footer-links">
+    <a href="index.html" class="footer-link">Home</a>
+    <span class="footer-note">Free forever. No account needed.</span>
+  </div>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>document.getElementById('mainNav').classList.toggle('scrolled',window.scrollY>40),{passive:true});
+
+window.addEventListener('load',()=>{
+  setTimeout(()=>document.getElementById('pBadge').classList.add('visible'),80);
+  setTimeout(()=>document.getElementById('pTitle').classList.add('visible'),150);
+  setTimeout(()=>document.getElementById('pMeta').classList.add('visible'),240);
+});
+
+const ro=new IntersectionObserver(entries=>entries.forEach(e=>{
+  if(e.isIntersecting){e.target.classList.add('visible');ro.unobserve(e.target)}
+}),{threshold:0.06,rootMargin:'0px 0px -20px 0px'});
+for(let i=0;i<=7;i++){const c=document.getElementById('c'+i);if(c)ro.observe(c);}
+
+// ── SMOOTH FBM WARP DITHERING ──
+(function(){
+  const canvas = document.getElementById('bg-canvas');
+  const gl = canvas.getContext('webgl2');
+  if(!gl){ canvas.style.display='none'; return; }
+
+  const vs = `#version 300 es
+precision highp float;
+in vec4 position;
+void main(){ gl_Position = position; }`;
+
+  const fs = `#version 300 es
+precision highp float;
+out vec4 O;
+uniform vec2 resolution;
+uniform float time;
+#define FC gl_FragCoord.xy
+float hash(vec2 p){ return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453); }
+float noise(vec2 p){
+  vec2 i=floor(p), f=fract(p);
+  f=f*f*(3.-2.*f);
+  return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),
+             mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y);
+}
+float fbm(vec2 p){
+  float v=0.,a=.5;
+  for(int i=0;i<5;i++){ v+=a*noise(p); p=p*2.+vec2(1.7,9.2); a*=.5; }
+  return v;
+}
+float bayer4(vec2 p){
+  int x=int(mod(p.x,4.)); int y=int(mod(p.y,4.)); int idx=x+y*4;
+  float m[16];
+  m[0]=0.;m[1]=8.;m[2]=2.;m[3]=10.;
+  m[4]=12.;m[5]=4.;m[6]=14.;m[7]=6.;
+  m[8]=3.;m[9]=11.;m[10]=1.;m[11]=9.;
+  m[12]=15.;m[13]=7.;m[14]=13.;m[15]=5.;
+  return (m[idx]+.5)/16.;
+}
+void main(){
+  vec2 uv = FC / resolution;
+  float T = time;
+  vec2 q = vec2(fbm(uv + T*0.08), fbm(uv + vec2(5.2,1.3) + T*0.06));
+  vec2 r = vec2(fbm(uv + 4.*q + vec2(1.7,9.2) + T*0.05),
+                fbm(uv + 4.*q + vec2(8.3,2.8) + T*0.04));
+  float warpVal = fbm(uv + 4.*r + T*0.03);
+  float density = clamp(warpVal * 0.70 - 0.15, 0., 1.);
+  float d = step(bayer4(FC), density);
+  vec3 colorBack  = vec3(0.980, 0.992, 0.976);
+  vec3 colorFront = vec3(0.180, 0.788, 0.604);
+  O = vec4(mix(colorBack, colorFront, d), 1.0);
+}`;
+
+  function mk(t,s){const sh=gl.createShader(t);gl.shaderSource(sh,s);gl.compileShader(sh);return sh;}
+  const prog=gl.createProgram();
+  gl.attachShader(prog,mk(gl.VERTEX_SHADER,vs));
+  gl.attachShader(prog,mk(gl.FRAGMENT_SHADER,fs));
+  gl.linkProgram(prog); gl.useProgram(prog);
+
+  const buf=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,1,-1,-1,1,1,1,-1]),gl.STATIC_DRAW);
+  const pos=gl.getAttribLocation(prog,'position');
+  gl.enableVertexAttribArray(pos); gl.vertexAttribPointer(pos,2,gl.FLOAT,false,0,0);
+
+  const uRes=gl.getUniformLocation(prog,'resolution');
+  const uTime=gl.getUniformLocation(prog,'time');
+
+  function resize(){
+    const dpr=Math.min(window.devicePixelRatio||1,2);
+    canvas.width=window.innerWidth*dpr;
+    canvas.height=window.innerHeight*dpr;
+    gl.viewport(0,0,canvas.width,canvas.height);
+  }
+  resize();
+  window.addEventListener('resize',resize,{passive:true});
+  setTimeout(()=>canvas.classList.add('loaded'),100);
+
+  let shaderTime=0, lastTs=null;
+  const BASE_RATE=0.00065;
+  (function loop(ts){
+    const dt = lastTs===null ? 0 : ts-lastTs;
+    lastTs=ts;
+    shaderTime += dt * BASE_RATE * 0.2;
+    gl.uniform2f(uRes,canvas.width,canvas.height);
+    gl.uniform1f(uTime,shaderTime);
+    gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+    requestAnimationFrame(loop);
+  })(0);
+})();
+</script>
+</body>
+</html>
