@@ -408,7 +408,10 @@ footer{
 }
 .footer-logo{font-family:'DM Serif Display',serif;font-size:18px;color:var(--ink);letter-spacing:-0.5px}
 .footer-logo span{color:var(--mint)}
+.footer-right{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
 .footer-note{font-size:13px;color:var(--ink-muted);font-weight:400}
+.footer-link{font-size:13px;color:var(--ink-muted);text-decoration:none;transition:color 0.2s;font-weight:400}
+.footer-link:hover{color:var(--mint)}
 </style>
 </head>
 <body>
@@ -566,7 +569,10 @@ footer{
 
 <footer>
   <div class="footer-logo">train<span>mint</span></div>
-  <p class="footer-note">Free forever. No account needed.</p>
+  <div class="footer-right">
+    <a href="privacy.html" class="footer-link">Privacy Policy</a>
+    <p class="footer-note">Free forever. No account needed.</p>
+  </div>
 </footer>
 
 <script>
