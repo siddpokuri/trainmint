@@ -601,6 +601,9 @@ window.addEventListener('load',()=>{
 (function(){
   const canvas = document.getElementById('bg-canvas');
   const gl = canvas.getContext('webgl2');
+  gl.getExtension('EXT_shader_derivatives');
+  gl.disable(gl.DEPTH_TEST);
+  gl.disable(gl.BLEND);
   if(!gl){ canvas.style.display='none'; return; }
 
   const vs = `#version 300 es
