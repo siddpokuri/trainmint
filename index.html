@@ -697,7 +697,14 @@ void main(){
   // This prevents any perceived "jump" or speed-up during scroll.
   let shaderTime=0, lastTs=null;
   const BASE_RATE=0.00065; // seconds of shader time per real millisecond at speed=1
+  let lastFrame = 0;
+  const FPS_LIMIT = 45;
   (function loop(ts){
+    if (ts - lastFrame < 1000 / FPS_LIMIT) {
+      requestAnimationFrame(loop);
+      return;
+    }
+    lastFrame = ts;
     const dt = lastTs===null ? 0 : ts-lastTs;
     lastTs=ts;
     currentSpeed+=(targetSpeed-currentSpeed)*0.03;
