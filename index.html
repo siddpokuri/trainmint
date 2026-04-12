@@ -15,6 +15,10 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
+img {
+  content-visibility: auto;
+}
+
 :root{
   --mint:#0F8A5F;
   --mint-light:#DFF4EC;
@@ -448,7 +452,13 @@ footer{
   <!-- Dithering canvas — contained inside hero, smooth warp like reference screenshot -->
   <canvas id="hero-canvas"></canvas>
   <!-- Mountain background -->
-  <img src="mountain.png" alt="" class="hero-mountain" aria-hidden="true">
+  <img 
+    src="mountain.png"
+    loading="lazy"
+    decoding="async"
+    class="hero-mountain"
+    alt=""
+  />
   <div class="hero-floats">
     <div class="float-card fc1"><div class="dot"></div>Chest · Shoulders · Triceps</div>
     <div class="float-card fc2"><div class="dot"></div>~52 min estimated</div>
@@ -582,7 +592,13 @@ footer{
 
 <script>
 // Nav scroll
-window.addEventListener('scroll',()=>document.getElementById('mainNav').classList.toggle('scrolled',window.scrollY>40),{passive:true});
+let lastScroll = 0;
+window.addEventListener('scroll', () => {
+  if (Date.now() - lastScroll < 50) return;
+  lastScroll = Date.now();
+  document.getElementById('mainNav')
+    .classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
 
 // Scroll reveal
 const ro=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');ro.unobserve(e.target)}}),{threshold:0.07,rootMargin:'0px 0px -20px 0px'});
